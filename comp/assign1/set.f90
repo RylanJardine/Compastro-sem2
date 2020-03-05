@@ -13,28 +13,27 @@ contains
     real,parameter :: pi=4.*atan(1.)
     n=100
     !set initial x
-    open(1,file='results.dat', status='replace',action='write')
+    ! open(1,file='results.dat', status='replace',action='write')
     x(1)=xmin
 
 
     v(1)=0
 
     h(1)=1.2*xmin
-    dx=(xmax-xmin)/(n)
+    dx=(xmax-xmin)/(n-1)
     !iterate over all i for x to create a grid of positions
-    write(1,*) x(1),v(1)
-    do i=2,nx
+    ! write(1,*) x(1),v(1)
+    do i=2,n
 
       x(i)=x(i-1)+dx
       ! v(i)=cs(i)*10.**(-4)*sin(x(i))
       v(i)=sin(2*pi*x(i))
       h(i)=1.2*x(i)
-      write(1,*) x(i),v(i)
-      print*,'x(i)',x(i),'v(i)',v(i)
+      ! write(1,*) x(i),v(i)
     enddo
 
     m(:)=rho(1)*x(:)
-    close(1)
+    ! close(1)
 
 
 

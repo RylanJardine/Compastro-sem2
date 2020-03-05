@@ -1,5 +1,6 @@
 program assign
   use set
+  use output
   implicit none
   integer, parameter :: nx=106
   real :: x(nx), v(nx), m(nx), rho(nx), u(nx), p(nx), cs(nx),h(nx)
@@ -9,19 +10,20 @@ program assign
 
   rho(:)=rho0
   cs(:)=1.
-  print*,n
+
 
 
   call setup(rho,nx,x,v,xmin,dx,m,rho0,cs,n,h,xmax)
 
 
-
+  call output
 
 
   print*,'hello world'
 
   print*,v,x
 
+    print*,n
 
 
 
