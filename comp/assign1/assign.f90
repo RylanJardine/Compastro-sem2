@@ -1,6 +1,6 @@
 program assign
   use set
-  use output
+  use inout
   implicit none
   integer, parameter :: nx=106
   real :: x(nx), v(nx), m(nx), rho(nx), u(nx), p(nx), cs(nx),h(nx)
@@ -16,7 +16,7 @@ program assign
   call setup(rho,nx,x,v,xmin,dx,m,rho0,cs,n,h,xmax)
 
 
-  call output
+  call output(n,x,v,h,nx)
 
 
   print*,'hello world'

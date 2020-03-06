@@ -26,9 +26,9 @@ contains
     do i=2,n
 
       x(i)=x(i-1)+dx
-      ! v(i)=cs(i)*10.**(-4)*sin(x(i))
-      v(i)=sin(2*pi*x(i))
-      h(i)=1.2*x(i)
+      v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
+      !Smoothing length??? 
+      h(i)=1.2*(x(i)-x(i-1))
       ! write(1,*) x(i),v(i)
     enddo
 
