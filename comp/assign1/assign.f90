@@ -1,6 +1,7 @@
 program assign
   use set
   use inout
+  use density
   implicit none
   integer, parameter :: nx=106
   real :: x(nx), v(nx), m(nx), rho(nx), u(nx), p(nx), cs(nx),h(nx)
