@@ -5,11 +5,12 @@ module density
 
 
 contains
-  subroutine get_density(m,x,rho,nx,n)
-    real,intent(in) :: m(nx), x(nx)
-    real,intent(out) :: rho(nx),hin,xin
-    real :: rhop(nx)
+  subroutine get_density(m,x,rho,nx,n,h)
+    real,intent(in) :: m(nx), x(nx),h(nx)
+    real,intent(out) :: rho(nx)
+    real :: rhop(nx),w(nx),hin,xin
     integer :: i,j
+    integer,intent(in) :: nx,n
 
     do i=1,nx
       do j=1,nx
