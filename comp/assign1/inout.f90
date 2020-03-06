@@ -1,11 +1,10 @@
 module inout
-  use set
   implicit none
 
 
 contains
-  subroutine output(n,x,v,h,nx)
-  real,intent(in) :: x(nx),v(nx),h(nx)
+  subroutine output(n,x,v,h,nx,rho)
+  real,intent(in) :: x(nx),v(nx),h(nx),rho(nx)
   integer,intent(in) :: n,nx
   real :: time
   integer :: i,iunit
@@ -14,11 +13,11 @@ contains
   write(filename,"(a,i5.5)") 'snap_'
   open(newunit=iunit,file=filename,status='replace')
 
-  write(iunit,*) '# x v h'
+  write(iunit,*) '# x v h rho'
   write(iunit,*) time
   do i=1,n
     ! call setup(rho,nx,x,v,xmin,dx,m,rho0,cs,n,h,xmax)
-    write(iunit,*) x(i),v(i),h(i)
+    write(iunit,*) x(i),v(i),h(i),rho(i)
   enddo
 
   !

@@ -2,14 +2,16 @@ module kernel
   implicit none
 
 contains
-  subroutine kern(hin,nx,x,xin,w)
+  subroutine kern(hin,nx,x,xin,w,n)
     real,intent(in) :: hin,x(nx),xin
     real,intent(out) :: w(nx)
     integer :: i
     real :: sig3,q(nx)
-    integer,intent(in) :: nx
+    integer,intent(in) :: nx,n
 
+    print*,hin
     sig3=2./(3.*hin)
+    ! print*,sig3
 
     ! do i=1,nx
     !   q(i)=abs(xin-x(i))
@@ -23,7 +25,7 @@ contains
     ! enddo
 
 
-    do i=1,nx
+    do i=1,n
       q(i)=abs(xin-x(i))
       if (0 .LE. q(i)/hin .and. q(i)/hin <= 1) then
         w(i)=sig3*(1-3./2.*q(i)**2*(1-q(i)/2.))
