@@ -3,8 +3,8 @@ module set
 
 
 contains
-  subroutine setup(rho,nx,x,v,xmin,dx,m,rho0,cs,n,h,xmax)
-    real, intent(in) :: rho(nx),xmin,rho0,cs(nx),xmax
+  subroutine setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
+    real, intent(in) :: rho(nx),xmin,cs(nx),xmax
     ! integer, intent(in) :: nx
     real,intent(out) :: x(nx),m(nx),v(nx),h(nx),dx
     integer,intent(out) :: n
@@ -19,8 +19,9 @@ contains
 
     v(1)=0
 
-    h(1)=1.2*xmin
+
     dx=(xmax-xmin)/(n-1)
+    h=1.2*dx
     !iterate over all i for x to create a grid of positions
     ! write(1,*) x(1),v(1)
     do i=2,n
@@ -28,11 +29,11 @@ contains
       x(i)=x(i-1)+dx
       v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
       !Smoothing length???
-      h(i)=1.2*(x(i)-x(i-1))
+      ! h(i)=1.2*(x(i)-x(i-1))
       ! write(1,*) x(i),v(i)
     enddo
 
-    m=rho*(xmax-xmin)/(n)
+    m(:n)=rho(:n)*(xmax-xmin)/(n)
     print*,m,sum(m(1:100))
     ! close(1)
 

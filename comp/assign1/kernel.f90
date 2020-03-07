@@ -27,7 +27,7 @@ contains
 
     do i=1,n
       q(i)=abs(xin-x(i))/hin
-      print*,q(i)/hin
+      ! print*,q(i)/hin
       if (0 .LE. q(i) .and. q(i) <= 1) then
         w(i)=sig3*(1-3./2.*q(i)**2*(1-q(i)/2.))
       elseif (1 < q(i) .and. q(i) <= 2) then
