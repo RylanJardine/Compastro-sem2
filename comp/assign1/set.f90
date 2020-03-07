@@ -4,10 +4,10 @@ module set
 
 contains
   subroutine setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
-    real, intent(in) :: rho(nx),xmin,cs(nx),xmax
+    real, intent(in) :: rho(n),xmin,cs(n),xmax
     ! integer, intent(in) :: nx
-    real,intent(out) :: x(nx),m(nx),v(nx),h(nx),dx
-    integer,intent(out) :: n
+    real,intent(out) :: x(n),m(n),v(n),h(n),dx
+    integer,intent(inout) :: n
     integer,intent(in) :: nx
     integer :: i
     real,parameter :: pi=4.*atan(1.)
@@ -21,7 +21,7 @@ contains
 
 
     dx=(xmax-xmin)/(n-1)
-    h=1.2*dx
+    h(:n)=1.2*dx
     !iterate over all i for x to create a grid of positions
     ! write(1,*) x(1),v(1)
     do i=2,n
@@ -34,7 +34,7 @@ contains
     enddo
 
     m(:n)=rho(:n)*(xmax-xmin)/(n)
-    print*,m,sum(m(1:100))
+    ! print*,m,sum(m(1:100))
     ! close(1)
 
 

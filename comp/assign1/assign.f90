@@ -25,6 +25,7 @@ program assign
 
   print*,'hello world'
   print*,rho
+  print*,n
 
 
 

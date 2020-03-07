@@ -15,7 +15,7 @@ contains
 
   write(iunit,*) '# x v h rho m'
   write(iunit,*) time
-  do i=1,n
+  do i=1,nx
     ! call setup(rho,nx,x,v,xmin,dx,m,rho0,cs,n,h,xmax)
     write(iunit,*) x(i),v(i),h(i),rho(i),m(i)
   enddo
