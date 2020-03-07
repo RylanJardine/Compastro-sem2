@@ -4,9 +4,10 @@ module set
 
 contains
   subroutine setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
-    real, intent(in) :: rho(n),xmin,cs(n),xmax
+
+    real, intent(out) :: xmax,xmin
     ! integer, intent(in) :: nx
-    real,intent(out) :: x(n),m(n),v(n),h(n),dx
+    real,intent(out) :: x(n),m(n),v(n),h(n),dx,rho(n),cs(n)
     integer,intent(inout) :: n
     integer,intent(in) :: nx
     integer :: i
@@ -14,13 +15,18 @@ contains
     n=100
     !set initial x
     ! open(1,file='results.dat', status='replace',action='write')
+    xmin=0.
+    xmax=1.
+    cs(:n)=1.
+    rho(:n)=1.
     x(1)=xmin
 
 
-    v(1)=0
+    v(1)=0.
 
 
     dx=(xmax-xmin)/(n-1)
+    print*,dx,h,n
     h(:n)=1.2*dx
     !iterate over all i for x to create a grid of positions
     ! write(1,*) x(1),v(1)
