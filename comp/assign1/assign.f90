@@ -17,14 +17,11 @@ program assign
   call setup(rho,nx,x,v,xmin,dx,m,rho0,cs,n,h,xmax)
   call get_density(m,x,rho,nx,n,h)
 
-  call output(n,x,v,h,nx,rho)
+  call output(n,x,v,h,nx,rho,m)
 
 
   print*,'hello world'
 
-  print*,v,x
-
-    print*,n
 
 
 

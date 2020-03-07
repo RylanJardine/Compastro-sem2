@@ -27,12 +27,13 @@ contains
 
       x(i)=x(i-1)+dx
       v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
-      !Smoothing length??? 
+      !Smoothing length???
       h(i)=1.2*(x(i)-x(i-1))
       ! write(1,*) x(i),v(i)
     enddo
 
-    m(:)=rho(1)*x(:)
+    m=rho*(xmax-xmin)/(n)
+    print*,m,sum(m(1:100))
     ! close(1)
 
 

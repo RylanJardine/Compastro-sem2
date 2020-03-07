@@ -9,9 +9,9 @@ contains
     real :: sig3,q(nx)
     integer,intent(in) :: nx,n
 
-    print*,hin
+    ! print*,hin
     sig3=2./(3.*hin)
-    ! print*,sig3
+    print*,sig3
 
     ! do i=1,nx
     !   q(i)=abs(xin-x(i))
@@ -26,14 +26,16 @@ contains
 
 
     do i=1,n
-      q(i)=abs(xin-x(i))
-      if (0 .LE. q(i)/hin .and. q(i)/hin <= 1) then
+      q(i)=abs(xin-x(i))/hin
+      print*,q(i)/hin
+      if (0 .LE. q(i) .and. q(i) <= 1) then
         w(i)=sig3*(1-3./2.*q(i)**2*(1-q(i)/2.))
-      elseif (1 < q(i)/hin .and. q(i)/hin <= 2) then
+      elseif (1 < q(i) .and. q(i) <= 2) then
         w(i)=sig3/4.*(2.-q(i))**3
       else
         w(i)=0.
       endif
+      ! print*,w(i)
     enddo
 
   end subroutine

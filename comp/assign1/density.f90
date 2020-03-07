@@ -13,14 +13,21 @@ contains
     integer,intent(in) :: nx,n
 
     do i=1,n
+      call kern(h(i),nx,x,x(i),w,n)
       do j=1,n
-        call kern(h(i),nx,x,x(i),w,n)
-        rhop(j+1)=rhop(j)+m(j)*w(j)
+
+        rhop(j)=m(j)*w(j)
         ! rho(i)=rho(i)+rho(j)
         ! print*,rhop(j)
 
       enddo
       rho(i)=sum(rhop)
+
+    !   if (i==5) then
+    !   !!!!!!!!!!
+    !     stop
+    !   !!!!!!!!
+    ! endif
     enddo
 
   end subroutine
