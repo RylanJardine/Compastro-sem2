@@ -12,15 +12,19 @@ contains
     integer :: i,j
     integer,intent(in) :: nx,n
 
-    do i=1,nx
+    do i=1,n
       call kern(h(i),nx,x,x(i),w,n)
-      do j=1,nx
+      do j=1,n
 
         rhop(j)=m(j)*w(j)
         ! rho(i)=rho(i)+rho(j)
         ! print*,rhop(j)
+        if (rhop(j) .NE. 0) then
+          print*,rhop(j),j
+        endif
 
       enddo
+      ! print*,rhop
       rho(i)=sum(rhop)
 
     !   if (i==5) then

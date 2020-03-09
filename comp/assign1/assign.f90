@@ -4,7 +4,7 @@ program assign
   use density
   use ghost
   implicit none
-  integer, parameter :: nx=106
+  integer, parameter :: nx=103
   real :: x(nx), v(nx), m(nx), rho(nx), u(nx), p(nx), cs(nx),h(nx)
   real :: dx,xmax,xmin
   integer :: n

@@ -12,16 +12,16 @@ contains
     real,parameter :: pi=4.*atan(1.)
 
 
-    x(n+1)=x(1)
+    ! x(n+1)=x(1)
 
-    ng=nx-n
-    v(n+1)=v(1)
+    ng=(nx-n)/2
+    ! v(n+1)=v(1)
 
     h(n:)=1.2*dx
     cs(n:)=1.
     !iterate over all i for x to create a grid of positions
     ! write(1,*) x(1),v(1)
-    do i=n+2,nx
+    do i=n+1,n+ng
 
       x(i)=x(i-1)+dx
       v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
@@ -29,12 +29,17 @@ contains
       ! h(i)=1.2*(x(i)-x(i-1))
       ! write(1,*) x(i),v(i)
     enddo
-    print*,rho
+
+    do i=n+ng,nx
+      x(i)=
+
+    print*,'pre-rho',rho
     do i=1,ng
       rho(n+i)=rho(i)
     enddo
-    print*,rho
-    m(n:)=rho(n:)*(xmax-xmin)/(n)
+    print*,'post-rho',rho
+    m(n:)=rho(n:)*dx
+
 
 
   end subroutine

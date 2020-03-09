@@ -25,13 +25,13 @@ contains
     ! enddo
 
 
-    do i=1,nx
+    do i=1,n
       q(i)=abs(xin-x(i))/hin
       ! print*,q(i)/hin
-      if (0 .LE. q(i) .and. q(i) <= 1) then
-        w(i)=sig3*(1-3./2.*q(i)**2*(1-q(i)/2.))
-      elseif (1 < q(i) .and. q(i) <= 2) then
-        w(i)=sig3/4.*(2.-q(i))**3
+      if (0. .LE. q(i) .and. q(i) <= 1.) then
+        w(i)=sig3*(1.-3./2.*q(i)**2.*(1-q(i)/2.))
+      elseif (1. < q(i) .and. q(i) <= 2.) then
+        w(i)=sig3/4.*(2.-q(i))**3.
       else
         w(i)=0.
       endif

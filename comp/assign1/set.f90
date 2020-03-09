@@ -39,7 +39,7 @@ contains
       ! write(1,*) x(i),v(i)
     enddo
 
-    m(:n)=rho(:n)*(xmax-xmin)/(n)
+    m(:n)=rho(:n)*dx
     ! print*,m,sum(m(1:100))
     ! close(1)
 

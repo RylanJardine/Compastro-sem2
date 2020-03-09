@@ -19,7 +19,7 @@ contains
     ! call setup(rho,nx,x,v,xmin,dx,m,rho0,cs,n,h,xmax)
     write(iunit,*) x(i),v(i),h(i),rho(i),m(i)
   enddo
-
+  close(iunit)
   !
   ! setup(rho,nx,x,v,xmin,dx,m,rho0,cs,n,h,xmax)
   !
