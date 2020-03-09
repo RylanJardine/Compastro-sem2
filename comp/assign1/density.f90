@@ -12,9 +12,9 @@ contains
     integer :: i,j
     integer,intent(in) :: nx,n
 
-    do i=1,n
+    do i=1,nx
       call kern(h(i),nx,x,x(i),w,n)
-      do j=1,n
+      do j=1,nx
 
         rhop(j)=m(j)*w(j)
         ! rho(i)=rho(i)+rho(j)

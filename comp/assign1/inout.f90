@@ -3,8 +3,8 @@ module inout
 
 
 contains
-  subroutine output(n,x,v,h,nx,rho,m)
-  real,intent(in) :: x(nx),v(nx),h(nx),rho(nx),m(nx)
+  subroutine output(n,x,v,h,nx,rho,m,p,cs)
+  real,intent(in) :: x(nx),v(nx),h(nx),rho(nx),m(nx),p(nx),cs(nx)
   integer,intent(in) :: n,nx
   real :: time
   integer :: i,iunit
@@ -13,11 +13,11 @@ contains
   write(filename,"(a,i5.5)") 'snap_'
   open(newunit=iunit,file=filename,status='replace')
 
-  write(iunit,*) '# x v h rho m'
+  write(iunit,*) '# x v h rho m p cs'
   write(iunit,*) time
   do i=1,nx
     ! call setup(rho,nx,x,v,xmin,dx,m,rho0,cs,n,h,xmax)
-    write(iunit,*) x(i),v(i),h(i),rho(i),m(i)
+    write(iunit,*) x(i),v(i),h(i),rho(i),m(i),p(i),cs(i)
   enddo
   close(iunit)
   !

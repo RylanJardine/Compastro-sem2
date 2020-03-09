@@ -25,7 +25,7 @@ contains
     ! enddo
 
 
-    do i=1,n
+    do i=1,nx
       q(i)=abs(xin-x(i))/hin
       ! print*,q(i)/hin
       if (0. .LE. q(i) .and. q(i) <= 1.) then

@@ -24,21 +24,30 @@ contains
     do i=n+1,n+ng
 
       x(i)=x(i-1)+dx
-      v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
+      v(i)=v(i-n)
+      rho(i)=rho(i-n)
+      m(i)=m(i-n)
       !Smoothing length???
       ! h(i)=1.2*(x(i)-x(i-1))
       ! write(1,*) x(i),v(i)
+      ! rho(n+i)=rho(i)
     enddo
 
-    do i=n+ng,nx
-      x(i)=
-
-    print*,'pre-rho',rho
     do i=1,ng
-      rho(n+i)=rho(i)
+      x(i+n+ng)=-dx*i
+      v(i+n+ng)=v(n-i)
+      rho(i+n+ng)=rho(n-i)
+      m(i+n+ng)=m(n-i)
+      ! rho(i+n+ng)=rho(0-i)
     enddo
-    print*,'post-rho',rho
-    m(n:)=rho(n:)*dx
+
+    ! print*,'pre-rho',v
+    ! do i=1,nx
+    !   rho(n+i)=rho(i)
+    ! enddo
+    print*,'post-rho',v
+    ! m(n:ng)=rho(n:ng)*dx
+    ! m(ng:nx)=rho(ng:nx)*dx
 
 
 
