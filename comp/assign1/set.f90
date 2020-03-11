@@ -25,7 +25,7 @@ contains
 
 
     dx=(xmax-xmin)/(n-1)
-    print*,dx,h,n
+
     h(:n)=1.2*dx
     do i=2,n
 
