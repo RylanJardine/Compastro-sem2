@@ -1,4 +1,5 @@
 module density
+  use set
   implicit none
   public :: dw
 
@@ -95,7 +96,7 @@ contains
         do j=1,nx
           ap(j)=m(j)*((p(i)+qa)/rho(i)**2*dw(x(i),x(j),h(i),j)+(p(j)+qa)/rho(j)**2*dw(x(i),x(j),h(j),j))
         enddo
-        print*,'bob'
+        ! print*,'bob'
         ! sum over all elements to find density per particle
         a(i)=-sum(ap)
       enddo
@@ -117,9 +118,10 @@ contains
       q=abs(xin-xon)/hin
       dq=(xin-xon)/(hin*abs(xin-xon))
 
-      if (xin-xon == 0.) then
+      if (abs(xin-xon) .le. 10.**(-8)) then
         dq=0.
       endif
+      ! print*,xin-xon
 
 
       ! print*,q,dq
@@ -132,7 +134,7 @@ contains
         dw=0.
       endif
       if (dw .ne. 0.) then
-        print*,dw,i
+        ! print*,dw,i
       endif
     ! enddo
 
@@ -140,9 +142,9 @@ contains
   end function
 
 
-  subroutine derivs(cs,rho,p,n,a,nx,x,m,h)
-    real, intent(in) ::  m(nx)
-    real, intent(inout) :: rho(nx), cs(nx),p(nx), x(nx),h(nx)
+  subroutine derivs(cs,rho,p,n,a,nx,x,m,h,dx,v)
+    real, intent(in) ::  dx
+    real, intent(inout) :: rho(nx), cs(nx),p(nx), x(nx),h(nx),v(nx),m(nx)
     real,intent(out) :: a(nx)
     integer,intent(in) :: n,nx
 
@@ -151,6 +153,8 @@ contains
     call equation_of_state(cs,rho,p,nx,n)
 
     call get_accel(cs,rho,p,n,a,nx,x,m,h)
+
+    call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,p,a)
 
   end subroutine
 
