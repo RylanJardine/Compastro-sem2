@@ -3,22 +3,25 @@ module set
 
 
 contains
-  subroutine setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,a,p)
+  subroutine setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
 
     real, intent(out) :: xmax,xmin
-    ! integer, intent(in) :: nx
-    real,intent(out) :: x(n),m(n),v(n),h(n),dx,rho(n),cs(n)
-    real, intent (inout) :: p(n),a(n)
     integer,intent(inout) :: n
     integer,intent(in) :: nx
+    ! integer, intent(in) :: nx
+    real,intent(out) :: x(:),m(:),v(:),h(:),dx,rho(:),cs(:)
+    ! real, intent (inout) :: a(n)
+
+
     integer :: i
     real,parameter :: pi=4.*atan(1.)
     n=100
 
     xmin=0.
     xmax=1.
-    cs(:n)=1.
-    rho(:n)=1.
+    cs(1:n)=1.
+    rho(1:n)=1.
+    ! print*,rho(:), 5
     x(1)=xmin
 
 
@@ -27,7 +30,7 @@ contains
 
     dx=(xmax-xmin)/(n-1)
 
-    h(:n)=1.2*dx
+    h(1:n)=1.2*dx
     do i=2,n
 
       x(i)=x(i-1)+dx
@@ -35,20 +38,21 @@ contains
 
     enddo
 
-    m(:n)=rho(:n)*dx
+    m(1:n)=rho(1:n)*dx
 
-    call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,p,a)
+    call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
 
   end subroutine
 
 
-  subroutine set_ghosts(rho,nx,x,v,dx,m,cs,n,h,p,a)
+  subroutine set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
     real, intent(in) :: dx
-    real,intent(inout) :: rho(nx),cs(nx),p(nx),a(nx)
-    real,intent(out) :: x(nx),m(nx),v(nx),h(nx)
     integer,intent(in) :: n,nx
+    real,intent(inout) :: rho(nx),cs(nx)
+    real,intent(out) :: x(nx),m(nx),v(nx),h(nx)
+
     integer :: i,ng
-    real,parameter :: pi=4.*atan(1.)
+    ! real,parameter :: pi=4.*atan(1.)
 
     ng=(nx-n)/2
     h(n:)=1.2*dx
