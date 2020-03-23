@@ -83,6 +83,8 @@ contains
       ! a(i+n+ng)=a(n-i)
     enddo
 
+    
+
   end subroutine
 
 end module
