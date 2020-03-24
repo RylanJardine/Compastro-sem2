@@ -33,13 +33,14 @@ program assign
   call derivs(cs,rho,p,n,a,nx,x,m,h,dx,v)
   ! print*,'a',rho
   t=0.
+  ifile=0
+  dtout=0.05
+  tprint=ifile*dtout
   call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile)
 
   call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx)
   ! print*,'b',rho
-  ifile=0
-  dtout=0.05
-  tprint=ifile*dtout
+
   do while (t<5.)
     t=t+dt
     if (t>tprint) then

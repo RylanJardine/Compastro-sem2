@@ -77,6 +77,7 @@ contains
     integer,intent(in) :: nx,n
     real,intent(in) :: rho(nx)
     real,intent(out) :: p(nx), cs(nx)
+    real,parameter :: gamma = 1.
 
     ! calculate isothermal pressure
 
