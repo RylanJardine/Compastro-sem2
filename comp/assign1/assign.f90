@@ -41,7 +41,7 @@ program assign
   call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx)
   ! print*,'b',rho
 
-  do while (t<5.)
+  do while (t<5.*2*pi)
     t=t+dt
     if (t>tprint) then
       ifile=ifile+1
@@ -50,6 +50,7 @@ program assign
       call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile)
     end if
     call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx)
+
     ! read*,
   enddo
 

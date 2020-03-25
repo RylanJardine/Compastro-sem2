@@ -76,11 +76,12 @@ contains
     ! setup density, pressure and sound speed arrays
     integer,intent(in) :: nx,n
     real,intent(in) :: rho(nx)
-    real,intent(out) :: p(nx), cs(nx)
+    real,intent(inout) :: p(nx), cs(nx)
+    real, parameter :: gamma=1.
 
     ! calculate isothermal pressure
-
-    p=cs**2*rho
+    p=rho
+    cs=sqrt(p/rho)
     ! print*,rho
 
 
@@ -161,21 +162,26 @@ contains
     real, intent(in) ::  dx
     real, intent(inout) :: rho(nx), cs(nx),p(nx), x(nx),h(nx),v(nx),m(nx)
     real,intent(out) :: a(nx)
+    integer :: i
 
-
+    do i=1,3
+      call get_density(m,x,rho,nx,n,h)
+      call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
+    enddo
 
     call get_density(m,x,rho,nx,n,h)
+    call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
 
     call equation_of_state(cs,rho,p,nx,n)
     ! print*,p
     call get_accel(rho,p,n,a,nx,x,m,h)
-    if (p(23)==rho(23)) then
+    if (p(103)==rho(103)) then
       print*, 'yes'
     else
       print*,'no'
     endif
     ! print*,a
-    call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
+
 
 
 

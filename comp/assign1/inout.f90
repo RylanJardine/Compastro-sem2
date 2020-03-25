@@ -19,11 +19,12 @@ contains
   ! write in column headers and values
   write(iunit,*) '# x v h rho m p cs a'
   write(iunit,*) t
-  do i=1,n
+  do i=1,nx
 
     write(iunit,*) x(i),v(i),h(i),rho(i),m(i),p(i),cs(i),a(i)
   enddo
   close(iunit)
+  print*,p
 
 
   end subroutine

@@ -19,8 +19,8 @@ contains
 
     xmin=0.
     xmax=1.
-    cs(1:n)=1.
-    rho(1:n)=1.
+    cs=1.
+    rho=1.
     ! print*,rho(:), 5
     x(1)=xmin
 
@@ -30,7 +30,7 @@ contains
 
     dx=(xmax-xmin)/(n-1)
 
-    h(1:n)=1.2*dx
+    h=1.2*dx
     do i=2,n
 
       x(i)=x(i-1)+dx
@@ -38,7 +38,7 @@ contains
 
     enddo
 
-    m(1:n)=rho(1:n)*dx
+    m=rho*dx
 
     call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
 
@@ -50,18 +50,21 @@ contains
     integer,intent(in) :: n,nx
     real,intent(inout) :: rho(nx),cs(nx)
     real,intent(out) :: x(nx),m(nx),v(nx),h(nx)
+    real,parameter :: xmax=1.,xmin=0.
+    real :: l
 
     integer :: i,ng
     ! real,parameter :: pi=4.*atan(1.)
 
     ng=(nx-n)/2
-    h(n:)=1.2*dx
-    cs(n:)=1.
-
+    ! h(n:)=1.2*dx
+    ! cs(n:)=1.
+    l=xmax-xmin
 
     ! the ghost points which lead immediately after the particles e.g. 101, 102 ...
     do i=n+1,n+ng
-      x(i)=x(i-1)+dx
+      ! x(i)=x(i-1)+dx
+      x(i)=x(i-n+1)+l
       v(i)=v(i-n+1)
       rho(i)=rho(i-n+1)
       m(i)=m(i-n+1)
@@ -74,7 +77,8 @@ contains
     ! the ghost particles which exist before the first particles e.g. -1, -2...
     do i=1,ng
       ! x(i+n+ng)=-dx*i
-      x(i+n+ng)=x(1)-dx*i
+      x(i+n+ng)=x(n-i)-l
+      ! x(i+n+ng)=x(1)-dx*i
       v(i+n+ng)=v(n-i)
       rho(i+n+ng)=rho(n-i)
       m(i+n+ng)=m(n-i)
@@ -83,7 +87,7 @@ contains
       ! a(i+n+ng)=a(n-i)
     enddo
 
-    
+
 
   end subroutine
 
