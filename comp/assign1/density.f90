@@ -5,9 +5,9 @@ module density
 
 
 contains
-  subroutine get_density(m,x,rho,nx,n,h)
+  subroutine get_density(m,x,rho,nx,n,h,ng)
     ! set arrays as inputs and outputs of subroutine
-    integer,intent(in) :: nx,n
+    integer,intent(in) :: nx,n,ng
     real,intent(in) :: m(nx), x(nx)
     real,intent(out) :: rho(nx)
     real,intent(inout) ::h(nx)
@@ -20,12 +20,16 @@ contains
 
     !call kernel function and to assign density to each particle
 
-    do i=1,nx
+    do i=1,n+ng
       ! call kernel
-      call kern(h(i),nx,x,x(i),w,n)
+      call kern(h(i),nx,x,x(i),w,n,ng)
+      ! print*,w(i)
       ! sum over all elements to find density per particle
 
-      rho(i)=sum(m*w)
+      rho(i)=sum(m(1:n+ng)*w(1:n+ng))
+
+
+      ! print*,w
       ! print*,h(i),nx,x,x(i),w,n,rho(i)
       ! read*,
     enddo
@@ -37,9 +41,9 @@ contains
 
 
 
-  subroutine kern(hin,nx,x,xin,w,n)
+  subroutine kern(hin,nx,x,xin,w,n,ng)
     ! specific smoothing length and specific and general positions
-    integer,intent(in) :: nx,n
+    integer,intent(in) :: nx,n,ng
     real,intent(in) :: hin,x(nx),xin
 
     ! kernel
@@ -54,7 +58,7 @@ contains
     sig3=2./(3.*hin)
 
     ! create array of kernel values
-    do i=1,nx
+    do i=1,n+ng
       ! define parameter q
       q(i)=abs(xin-x(i))/hin
 
@@ -73,23 +77,23 @@ contains
   end subroutine
 
 
-  subroutine equation_of_state(cs,rho,p,nx,n)
+  subroutine equation_of_state(cs,rho,p,nx,n,ng)
     ! setup density, pressure and sound speed arrays
-    integer,intent(in) :: nx,n
+    integer,intent(in) :: nx,n,ng
     real,intent(in) :: rho(nx)
     real,intent(inout) :: p(nx), cs(nx)
     real, parameter :: gamma=1.
 
     ! calculate isothermal pressure
-    p=rho
-    cs=sqrt(p/rho)
+    p(1:n+ng)=rho(1:n+ng)
+    cs(1:n+ng)=sqrt(p(1:n+ng)/rho(1:n+ng))
     ! print*,rho
 
 
   end subroutine
 
-  subroutine get_accel(rho,p,n,a,nx,x,m,h,v,cs)
-    integer,intent(in) :: n,nx
+  subroutine get_accel(rho,p,n,a,nx,x,m,h,v,cs,ng)
+    integer,intent(in) :: n,nx,ng
     real,intent(in) :: rho(nx),m(nx),v(nx),cs(nx)
     real,intent(inout) ::  p(nx),x(nx),h(nx)
     real, intent(out) :: a(nx)
@@ -99,7 +103,7 @@ contains
     ! qa=0.
     ! qb=0.
 
-    do i=1,nx
+    do i=1,n+ng
 
 
       ! print*,qa
@@ -107,7 +111,7 @@ contains
         ! call kernel
         ! call kern(h(i),nx,x,x(i),w,n)
         ! compute the indivdual terms of the density sum
-        do j=1,nx
+        do j=1,n+ng
           vab=(v(i)-v(j))*((x(i)-x(j))/abs(x(i)-x(j)))
           qa=visc(rho(i),vab,cs(i))
           qb=visc(rho(j),vab,cs(j))
@@ -118,7 +122,7 @@ contains
         ! read*,
         ! print*,'bob'
         ! sum over all elements to find density per particle
-        a(i)=-sum(ap)
+        a(i)=-sum(ap(1:n+ng))
       enddo
 
       ! read*,
@@ -164,28 +168,31 @@ contains
   end function
 
 
-  subroutine derivs(cs,rho,p,n,a,nx,x,m,h,dx,v)
+  subroutine derivs(cs,rho,p,n,a,nx,x,m,h,dx,v,ng)
     integer,intent(in) :: n,nx
     real, intent(in) ::  dx
     real, intent(inout) :: rho(nx), cs(nx),p(nx), x(nx),h(nx),v(nx),m(nx)
     real,intent(out) :: a(nx)
     integer :: i
+    integer,intent(inout) :: ng
 
     do i=1,3
 
       ! print*,m/rho
-      call get_density(m,x,rho,nx,n,h)
-      call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
-      h=1.2*m/rho
+      call get_density(m,x,rho,nx,n,h,ng)
+      ! print*,h(1:n+ng)
+      call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
+
+      h(1:n+ng)=1.2*m(1:n+ng)/rho(1:n+ng)
 
     enddo
-
+    ! print*,h(1:n+ng)
     ! call get_density(m,x,rho,nx,n,h)
     ! call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
 
-    call equation_of_state(cs,rho,p,nx,n)
+    call equation_of_state(cs,rho,p,nx,n,ng)
     ! print*,p
-    call get_accel(rho,p,n,a,nx,x,m,h,v,cs)
+    call get_accel(rho,p,n,a,nx,x,m,h,v,cs,ng)
 
     ! print*,a
 

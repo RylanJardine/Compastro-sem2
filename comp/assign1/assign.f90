@@ -14,22 +14,22 @@ program assign
   ! real :: u(nx)
   ! define the max and min of your grid and number of particles, n
   real :: dx,xmax,xmin,t,dt,tprint,dtout
-  integer :: n,ifile,j
+  integer :: n,ifile,j,ng
   real,parameter :: pi=4.*atan(1.)
 
 
-  print*,'Select Standing Wave (1) or Shock Tube Problem (2)'
-  read*,j
-  if (j==1) then
-    ! nx=200
-    call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
-  else
-    call setup_shock(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
-  endif
+  ! print*,'Select Standing Wave (1) or Shock Tube Problem (2)'
+  ! read*,j
+  ! if (j==1) then
+  !   ! nx=200
+  !   call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng)
+  ! else
+  !   call setup_shock(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
+  ! endif
   ! call to setup initial conditions at time t=0
 
-
-  call derivs(cs,rho,p,n,a,nx,x,m,h,dx,v)
+  call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p)
+  call derivs(cs,rho,p,n,a,nx,x,m,h,dx,v,ng)
   open(1,file='kin.dat',status='replace',action='write')
   po=sum(m(1:n)*v(1:n))
   ek=sum(0.5*m(1:n)*v(1:n)**2)
@@ -47,7 +47,7 @@ program assign
   print*,tprint
   call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ek)
 
-  call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx,ek)
+  call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx,ek,ng)
 
   ! print*,'b',rho
 
@@ -59,7 +59,7 @@ program assign
       print*,tprint
       call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ek)
     end if
-    call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx,ek)
+    call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx,ek,ng)
     po=sum(m(1:n)*v(1:n))
     mt=sum(m(1:n))
     write(1,*)t,ek,po,mt
