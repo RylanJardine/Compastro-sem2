@@ -37,6 +37,7 @@ program assign
   call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ek)
 
   call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx,ek)
+
   ! print*,'b',rho
 
   do while (t<5.)

@@ -88,28 +88,36 @@ contains
 
   end subroutine
 
-  subroutine get_accel(rho,p,n,a,nx,x,m,h)
+  subroutine get_accel(rho,p,n,a,nx,x,m,h,v,cs)
     integer,intent(in) :: n,nx
-    real,intent(in) :: rho(nx),m(nx)
+    real,intent(in) :: rho(nx),m(nx),v(nx),cs(nx)
     real,intent(inout) ::  p(nx),x(nx),h(nx)
     real, intent(out) :: a(nx)
     integer :: i,j
-    real :: qa,qb,ap(nx)
+    real :: qa,qb,ap(nx),vab
 
-    qa=0.
-    qb=0.
+    ! qa=0.
+    ! qb=0.
     ! p=rho
     ! call equation_of_state(cs,rho,p,nx,n)
 
     do i=1,nx
+
+
+      ! print*,qa
       ! do j=1,n
         ! call kernel
         ! call kern(h(i),nx,x,x(i),w,n)
         ! compute the indivdual terms of the density sum
         do j=1,nx
-          ap(j)=m(j)*((p(i)+qa)/rho(i)**2*dw(x(i),x(j),h(i),j)+(p(j)+qa)/rho(j)**2*dw(x(i),x(j),h(j),j))
+          vab=(v(i)-v(j))*(x(i)-x(j))/abs(x(i)-x(j))
+          qa=visc(rho(i),vab,cs(i))
+          qb=visc(rho(j),vab,cs(j))
+          ap(j)=m(j)*((p(i)+qa)/rho(i)**2*dw(x(i),x(j),h(i),j)+(p(j)+qb)/rho(j)**2*dw(x(i),x(j),h(j),j))
+          ! print*,'qa',qa,'qb',qb,'csa',cs(i),'csb',cs(j),'rho(i)',rho(i),'rho(j)',rho(j)
 
         enddo
+        ! read*,
         ! print*,'bob'
         ! sum over all elements to find density per particle
         a(i)=-sum(ap)
@@ -166,7 +174,7 @@ contains
     integer :: i
 
     do i=1,3
-      ! h=1.2*m/rho
+      h=1.2*m/rho
       ! print*,m/rho
       call get_density(m,x,rho,nx,n,h)
       call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
@@ -179,13 +187,25 @@ contains
 
     call equation_of_state(cs,rho,p,nx,n)
     ! print*,p
-    call get_accel(rho,p,n,a,nx,x,m,h)
+    call get_accel(rho,p,n,a,nx,x,m,h,v,cs)
 
     ! print*,a
 
-
-
-
   end subroutine
+
+  real function visc(rho,vab,cs)
+    real,intent(in) :: vab,rho,cs
+    real,parameter :: alpha=1.,beta=2.
+    real :: vsig
+
+    if (vab<0.) then
+      vsig=alpha*cs-beta*(vab)
+      visc=-0.5*rho*vsig*vab
+    else
+      visc=0.
+    endif
+    ! print*,visc
+
+  end function
 
 end module

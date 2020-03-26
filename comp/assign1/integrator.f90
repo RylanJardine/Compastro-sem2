@@ -23,10 +23,10 @@ contains
 
     x(1:n)=x(1:n)+dt*v(1:n)+0.5*(dt)**2*a0(1:n)
 
-    vs(1:n)=v(1:n)+dt*a(1:n)
+    v(1:n)=v(1:n)+dt*a(1:n)
     call derivs(cs,rho,p,n,a,nx,x,m,h,dx,v)
 
-    v(1:n)=vs(1:n)+0.5*dt*(a(1:n)-a0(1:n))
+    v(1:n)=v(1:n)+0.5*dt*(a(1:n)-a0(1:n))
 
     ! print*,p
 

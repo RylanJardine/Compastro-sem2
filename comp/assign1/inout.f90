@@ -12,7 +12,9 @@ contains
   integer :: i,iunit
   character(len=100) :: filename
 
+
   write(filename,"(a,i5.5)") 'snap_',ifile
+  ! print*,filename, iunit, 'bob'
   open(newunit=iunit,file=filename,status='replace')
 
   print "(a,f8.3)", ' writing '//trim(filename)// ' t =',t
