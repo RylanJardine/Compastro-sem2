@@ -1,6 +1,7 @@
 program assign
   ! Import modules for use
   use set
+  use set2
   use inout
   use density
   use integrator
@@ -8,17 +9,25 @@ program assign
   ! use equation
   implicit none
   ! set parameters and arrays of length nx
-  integer, parameter :: nx=120
+  integer, parameter :: nx=700
   real :: x(nx), v(nx), m(nx), rho(nx),  p(nx), cs(nx),h(nx),a(nx), ek,po,mt
   ! real :: u(nx)
   ! define the max and min of your grid and number of particles, n
   real :: dx,xmax,xmin,t,dt,tprint,dtout
-  integer :: n,ifile
+  integer :: n,ifile,j
   real,parameter :: pi=4.*atan(1.)
 
 
+  print*,'Select Standing Wave (1) or Shock Tube Problem (2)'
+  read*,j
+  if (j==1) then
+    ! nx=200
+    call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
+  else
+    call setup_shock(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
+  endif
   ! call to setup initial conditions at time t=0
-  call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
+
 
   call derivs(cs,rho,p,n,a,nx,x,m,h,dx,v)
   open(1,file='kin.dat',status='replace',action='write')
@@ -42,7 +51,7 @@ program assign
 
   ! print*,'b',rho
 
-  do while (t<5.*2*pi)
+  do while (t<5.)
     t=t+dt
     if (t>tprint) then
       ifile=ifile+1
