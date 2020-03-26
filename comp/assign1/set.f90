@@ -64,8 +64,8 @@ contains
 
 
     ! ng=(nx-n)/2
-    h(n:)=1.2*dx
-    cs(n:)=1.
+    ! h(n:)=1.2*dx
+    ! cs(n:)=1.
 
     !
     ! ng=0

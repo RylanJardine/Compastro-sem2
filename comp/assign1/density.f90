@@ -166,8 +166,12 @@ contains
     integer :: i
 
     do i=1,3
+      ! h=1.2*m/rho
+      ! print*,m/rho
       call get_density(m,x,rho,nx,n,h)
       call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
+      !
+
     enddo
 
     call get_density(m,x,rho,nx,n,h)
