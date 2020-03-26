@@ -20,3 +20,8 @@ run: solve
 
 clean:
 	rm *.o *.mod
+
+git:
+	git add --all
+	git commit -m 'lazy commit'
+	git push

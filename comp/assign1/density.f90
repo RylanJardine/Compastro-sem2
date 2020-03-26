@@ -8,8 +8,9 @@ contains
   subroutine get_density(m,x,rho,nx,n,h)
     ! set arrays as inputs and outputs of subroutine
     integer,intent(in) :: nx,n
-    real,intent(in) :: m(nx), x(nx),h(nx)
+    real,intent(in) :: m(nx), x(nx)
     real,intent(out) :: rho(nx)
+    real,intent(inout) ::h(nx)
     ! define place holder density, kernel as well as specific smoothing length and particle position
     real :: w(nx)
     ! define integers
@@ -28,7 +29,7 @@ contains
       ! print*,h(i),nx,x,x(i),w,n,rho(i)
       ! read*,
     enddo
-
+    ! h=m/rho
     ! print*,'c',rho
 
 
@@ -175,11 +176,7 @@ contains
     call equation_of_state(cs,rho,p,nx,n)
     ! print*,p
     call get_accel(rho,p,n,a,nx,x,m,h)
-    if (p(103)==rho(103)) then
-      print*, 'yes'
-    else
-      print*,'no'
-    endif
+
     ! print*,a
 
 

@@ -3,9 +3,9 @@ module integrator
   implicit none
 
 contains
-  subroutine tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx)
+  subroutine tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx,ek)
     integer,intent(in) :: nx,n
-    real, intent(inout) :: x(nx),v(nx),a(nx),h(nx),rho(nx),m(nx),p(nx),cs(nx),dx
+    real, intent(inout) :: x(nx),v(nx),a(nx),h(nx),rho(nx),m(nx),p(nx),cs(nx),dx,ek
     real :: vs(nx),dt,a0(nx)
     ! dt=0.001
     dt=0.2*h(1)/cs(1)
@@ -30,7 +30,7 @@ contains
 
     ! print*,p
 
-    print*,sum(m*v)
+    ek=sum(0.5*m(1:n)*v(1:n)**2)
 
   end subroutine
 end module

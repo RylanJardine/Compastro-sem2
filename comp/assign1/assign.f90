@@ -9,7 +9,7 @@ program assign
   implicit none
   ! set parameters and arrays of length nx
   integer, parameter :: nx=120
-  real :: x(nx), v(nx), m(nx), rho(nx),  p(nx), cs(nx),h(nx),a(nx)
+  real :: x(nx), v(nx), m(nx), rho(nx),  p(nx), cs(nx),h(nx),a(nx), ek
   ! real :: u(nx)
   ! define the max and min of your grid and number of particles, n
   real :: dx,xmax,xmin,t,dt,tprint,dtout
@@ -20,43 +20,38 @@ program assign
   ! call to setup initial conditions at time t=0
   call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
 
-  ! call to set up ghost particles on either side of grid
-  ! call set_ghosts(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax)
-  ! call to define density using kernel definition
-  ! call get_density(m,x,rho,nx,n,h)
-
-  ! Calculate pressure/sound speed
-  ! call equation_of_state(cs,rho,p,n)
-
-  ! call get_accel(cs,rho,p,n,a,nx,x,m,h)
-
   call derivs(cs,rho,p,n,a,nx,x,m,h,dx,v)
-  ! print*,'a',rho
+  open(1,file='kin.dat',status='replace',action='write')
+  ek=sum(0.5*m(1:n)*v(1:n)**2)
   t=0.
+  write(1,*)'#t ek'
+  write(1,*)t,ek
+
+
+  ! print*,'a',rho
+
   ifile=0
   dtout=0.05
   tprint=ifile*dtout
-  call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile)
+  print*,tprint
+  call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ek)
 
-  call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx)
+  call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx,ek)
   ! print*,'b',rho
 
-  do while (t<5.*2*pi)
+  do while (t<5.)
     t=t+dt
     if (t>tprint) then
       ifile=ifile+1
       tprint=ifile*dtout
       print*,tprint
-      call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile)
+      call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ek)
     end if
-    call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx)
+    call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx,ek)
+    write(1,*)t,ek
 
-    ! read*,
   enddo
-
-  ! write output to files
-
-
+  close(1)
 
   print*,'hello world'
 

@@ -48,6 +48,7 @@ contains
   subroutine set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
     real, intent(in) :: dx
     integer,intent(in) :: n,nx
+
     real,intent(inout) :: rho(nx),cs(nx)
     real,intent(out) :: x(nx),m(nx),v(nx),h(nx)
     real,parameter :: xmax=1.,xmin=0.
@@ -60,6 +61,26 @@ contains
     ! h(n:)=1.2*dx
     ! cs(n:)=1.
     l=xmax-xmin
+
+
+    ! ng=(nx-n)/2
+    h(n:)=1.2*dx
+    cs(n:)=1.
+
+    !
+    ! ng=0
+    ! do i=1,n
+    !   if (x(i)+2*h(i)>xmax) then
+    !     ng=ng+1
+    !     x(n+ng)=x(i)-(xmax-xmin)
+    !   elseif (x(i)-2*h(i)<xmin) then
+    !     ng=ng+1
+    !     x(n+ng)=x(i)+(xmax-xmin)
+    !   endif
+    ! enddo
+    !
+    ! print*,x
+
 
     ! the ghost points which lead immediately after the particles e.g. 101, 102 ...
     do i=n+1,n+ng
