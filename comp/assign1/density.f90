@@ -98,8 +98,6 @@ contains
 
     ! qa=0.
     ! qb=0.
-    ! p=rho
-    ! call equation_of_state(cs,rho,p,nx,n)
 
     do i=1,nx
 
@@ -110,12 +108,12 @@ contains
         ! call kern(h(i),nx,x,x(i),w,n)
         ! compute the indivdual terms of the density sum
         do j=1,nx
-          vab=(v(i)-v(j))*(x(i)-x(j))/abs(x(i)-x(j))
+          vab=(v(i)-v(j))*((x(i)-x(j))/abs(x(i)-x(j)))
           qa=visc(rho(i),vab,cs(i))
           qb=visc(rho(j),vab,cs(j))
           ap(j)=m(j)*((p(i)+qa)/rho(i)**2*dw(x(i),x(j),h(i),j)+(p(j)+qb)/rho(j)**2*dw(x(i),x(j),h(j),j))
           ! print*,'qa',qa,'qb',qb,'csa',cs(i),'csb',cs(j),'rho(i)',rho(i),'rho(j)',rho(j)
-
+          ! print*,'qa',qa,'qb',qb
         enddo
         ! read*,
         ! print*,'bob'
@@ -142,7 +140,7 @@ contains
       q=abs(xin-xon)/hin
       dq=(xin-xon)/(hin*abs(xin-xon))
 
-      if (abs(xin-xon) .le. 10.**(-8)) then
+      if (abs(xin-xon) .le. 10.**(-16)) then
         dq=0.
       endif
       ! print*,xin-xon
@@ -174,16 +172,16 @@ contains
     integer :: i
 
     do i=1,3
-      h=1.2*m/rho
+
       ! print*,m/rho
       call get_density(m,x,rho,nx,n,h)
       call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
-      !
+      h=1.2*m/rho
 
     enddo
 
-    call get_density(m,x,rho,nx,n,h)
-    call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
+    ! call get_density(m,x,rho,nx,n,h)
+    ! call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
 
     call equation_of_state(cs,rho,p,nx,n)
     ! print*,p
