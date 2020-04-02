@@ -9,7 +9,7 @@ contains
     real :: vs(nx),dt,a0(nx)
     integer,intent(inout) :: ng
     ! dt=0.001
-    dt=0.2*h(1)/cs(1)
+    dt=0.2*minval(h(1:n)/cs(1))
 
     a0=a
     ! x(:)=x(:)+dt*v(:)+0.5*(dt)**2*a0(:)
@@ -30,7 +30,8 @@ contains
     v(1:n)=v(1:n)+0.5*dt*(a(1:n)-a0(1:n))
 
     ! print*,p
-
+    ! print*,sum(m(1:n)*a(1:n))
+    ! print*,sum(rho(1:n))
     ek=sum(0.5*m(1:n)*v(1:n)**2)
 
   end subroutine

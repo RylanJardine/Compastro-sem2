@@ -35,13 +35,14 @@ contains
     do i=2,n
 
       x(i)=x(i-1)+dx
+      ! x(i)=xmin+(i-0.5)*dx
       v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
 
     enddo
 
     m(1:n)=rho(1:n)*dx
 
-    call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
+    ! call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
   end subroutine
 
