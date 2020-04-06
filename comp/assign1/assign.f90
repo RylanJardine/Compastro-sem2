@@ -29,17 +29,23 @@ program assign
   ! call to setup initial conditions at time t=0
 
   ! call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p)
-
-
-
-  call derivs(cs,rho,p,n,a,nx,x,m,h,dx,v,ng)
   open(2,file='try.dat',status='replace',action='write')
   write(2,*)'# x rho'
-  do i=1,n+ng
+  do i=1,n
     write(2,*)x(i),rho(i)
   enddo
   close(2)
   read*,
+
+
+  call derivs(cs,rho,p,n,a,nx,x,m,h,dx,v,ng)
+  ! open(2,file='try.dat',status='replace',action='write')
+  ! write(2,*)'# x rho'
+  ! do i=1,n+ng
+  !   write(2,*)x(i),rho(i)
+  ! enddo
+  ! close(2)
+  ! read*,
   open(1,file='kin.dat',status='replace',action='write')
   po=sum(m(1:n)*v(1:n))
   ek=sum(0.5*m(1:n)*v(1:n)**2)
@@ -50,7 +56,7 @@ program assign
 
 
   ifile=0
-  dtout=0.01
+  dtout=0.005
   tprint=ifile*dtout
   print*,tprint
   call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ek,ng)

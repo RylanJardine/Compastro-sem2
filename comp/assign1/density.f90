@@ -24,16 +24,9 @@ contains
     do i=1,n+ng
       ! call kernel
       call kern(h(i),nx,x,x(i),w,n,ng)
-      ! print*,m(i)
       ! sum over all elements to find density per particle
-
       rho(i)=sum(m(1:n+ng)*w(1:n+ng))
-      ! print*,rho(i)
-      ! print*,rho(1:n)
 
-      ! print*,w
-      ! print*,h(i),nx,x,x(i),w,n,rho(i)
-      ! read*,
     enddo
 
     ! h=m/rho
@@ -47,8 +40,6 @@ contains
     !   enddo
     ! enddo
 
-    ! print*,rho(1:n)
-    ! read*,
 
   end subroutine
 
@@ -128,7 +119,6 @@ contains
     ! calculate isothermal pressure
     p(1:n+ng)=rho(1:n+ng)
     cs(1:n+ng)=sqrt(p(1:n+ng)/rho(1:n+ng))
-    ! print*,rho
 
 
   end subroutine
@@ -147,29 +137,20 @@ contains
     do i=1,n+ng
 
       a(i)=0.
-      ! print*,qa
-      ! do j=1,n
-        ! call kernel
-        ! call kern(h(i),nx,x,x(i),w,n)
         ! compute the indivdual terms of the density sum
         do j=1,n+ng
           ! vab=(v(i)-v(j))*((x(i)-x(j))/abs(x(i)-x(j)))
           ! qa=visc(rho(i),vab,cs(i))
           ! qb=visc(rho(j),vab,cs(j))
           ap(j)=m(j)*((p(i)+qa)/rho(i)**2*dw(x(i),x(j),h(i),j)+(p(j)+qb)/rho(j)**2*dw(x(i),x(j),h(j),j))
-          ! print*,'qa',qa,'qb',qb,'csa',cs(i),'csb',cs(j),'rho(i)',rho(i),'rho(j)',rho(j)
-          ! print*,'qa',qa,'qb',qb
           a(i)=a(i)-ap(j)
 
           ! du(i)=m(j)*(p(i)+qa)/rho(i)**2*(v(i)-v(j))*dw(x(i),x(j),h(i))
         enddo
-        ! read*,
-        ! print*,'bob'
         ! sum over all elements to find density per particle
         ! a(i)=-sum(ap(1:n+ng))
       enddo
       ! print*,sum(m(1:n)*a(1:n))
-      ! read*,
 
   end subroutine
 
@@ -219,24 +200,19 @@ contains
     real,intent(out) :: a(nx)
     integer :: i
     integer,intent(inout) :: ng
-    ! print*,h(1:n)
     call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
-
-    open(2,file='try.dat',status='replace',action='write')
-    write(2,*)'# x rho'
-    do i=1,n+ng
-      write(2,*)x(i),rho(i)
-    enddo
-    close(2)
-    read*,
+    ! open(2,file='try.dat',status='replace',action='write')
+    ! write(2,*)'# x rho'
+    ! do i=1,n+ng
+    !   write(2,*)x(i),rho(i)
+    ! enddo
+    ! close(2)
+    ! read*,
 
     do i=1,3
 
-      ! print*,m/rho
       call get_density(m,x,rho,nx,n,h,ng)
-      ! print*,rho(1:n+ng)
-      ! print*,h(1:n+ng)
       call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
 
@@ -244,15 +220,13 @@ contains
       h(1:n+ng)=1.2*m(1:n+ng)/rho(1:n+ng)
 
     enddo
-    ! print*,h(1:n+ng)
     ! call get_density(m,x,rho,nx,n,h)
     ! call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
 
     call equation_of_state(cs,rho,p,nx,n,ng)
-    ! print*,p
+
     call get_accel(rho,p,n,a,nx,x,m,h,v,cs,ng)
 
-    ! print*,a
 
   end subroutine
 
@@ -267,7 +241,6 @@ contains
     else
       visc=0.
     endif
-    ! print*,visc
 
   end function
 

@@ -31,7 +31,7 @@ contains
     v(1:n)=v(1:n)+0.5*dt*(a(1:n)-a0(1:n))
 
     ! print*,p
-    ! print*,sum(m(1:n)*a(1:n))
+    print*,sum(m(1:n)*a(1:n))
     ! print*,sum(rho(1:n))
     ek=sum(0.5*m(1:n)*v(1:n)**2)
 
