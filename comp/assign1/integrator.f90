@@ -9,19 +9,10 @@ contains
     real :: vs(nx),dt,a0(nx)
     integer,intent(inout) :: ng
     ! dt=0.001
-    ! dt=0.2*minval(h(1:n)/cs(1))
-    dt=0.001
+    dt=0.2*minval(h(1:n)/cs(1))
+    ! dt=0.001
 
     a0=a
-    ! x(:)=x(:)+dt*v(:)+0.5*(dt)**2*a0(:)
-    !
-    ! vs(:)=v(:)+dt*a(:)
-    ! call derivs(cs,rho,p,n,a,nx,x,m,h,dx,vs)
-    !
-    ! v(:)=vs(:)+0.5*dt*(a(:)-a0(:))
-
-    ! a=a0
-
 
     x(1:n)=x(1:n)+dt*v(1:n)+0.5*(dt)**2*a0(1:n)
 

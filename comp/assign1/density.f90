@@ -131,17 +131,17 @@ contains
     integer :: i,j
     real :: qa,qb,ap(nx),vab
 
-    qa=0.
-    qb=0.
+    ! qa=0.
+    ! qb=0.
 
     do i=1,n+ng
 
       a(i)=0.
         ! compute the indivdual terms of the density sum
         do j=1,n+ng
-          ! vab=(v(i)-v(j))*((x(i)-x(j))/abs(x(i)-x(j)))
-          ! qa=visc(rho(i),vab,cs(i))
-          ! qb=visc(rho(j),vab,cs(j))
+          vab=(v(i)-v(j))*((x(i)-x(j))/abs(x(i)-x(j)))
+          qa=visc(rho(i),vab,cs(i))
+          qb=visc(rho(j),vab,cs(j))
           ap(j)=m(j)*((p(i)+qa)/rho(i)**2*dw(x(i),x(j),h(i),j)+(p(j)+qb)/rho(j)**2*dw(x(i),x(j),h(j),j))
           a(i)=a(i)-ap(j)
 
@@ -200,15 +200,10 @@ contains
     real,intent(out) :: a(nx)
     integer :: i
     integer,intent(inout) :: ng
+
     call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
-    ! open(2,file='try.dat',status='replace',action='write')
-    ! write(2,*)'# x rho'
-    ! do i=1,n+ng
-    !   write(2,*)x(i),rho(i)
-    ! enddo
-    ! close(2)
-    ! read*,
+
 
     do i=1,3
 
