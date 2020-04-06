@@ -35,6 +35,7 @@ contains
       ! print*,h(i),nx,x,x(i),w,n,rho(i)
       ! read*,
     enddo
+
     ! h=m/rho
     ! print*,'c',rho
 
@@ -221,6 +222,15 @@ contains
     ! print*,h(1:n)
     call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
+
+    open(2,file='try.dat',status='replace',action='write')
+    write(2,*)'# x rho'
+    do i=1,n+ng
+      write(2,*)x(i),rho(i)
+    enddo
+    close(2)
+    read*,
+
     do i=1,3
 
       ! print*,m/rho
@@ -228,6 +238,8 @@ contains
       ! print*,rho(1:n+ng)
       ! print*,h(1:n+ng)
       call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
+
+
 
       h(1:n+ng)=1.2*m(1:n+ng)/rho(1:n+ng)
 

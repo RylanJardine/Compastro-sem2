@@ -9,7 +9,8 @@ contains
     real :: vs(nx),dt,a0(nx)
     integer,intent(inout) :: ng
     ! dt=0.001
-    dt=0.2*minval(h(1:n)/cs(1))
+    ! dt=0.2*minval(h(1:n)/cs(1))
+    dt=0.001
 
     a0=a
     ! x(:)=x(:)+dt*v(:)+0.5*(dt)**2*a0(:)

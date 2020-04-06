@@ -1,6 +1,7 @@
 module set
   implicit none
 
+  ! use set_ghosts: only xmin,xmax
 
 contains
   subroutine setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p)
@@ -41,6 +42,7 @@ contains
     enddo
 
     m(1:n)=rho(1:n)*dx
+
 
     ! call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
@@ -111,7 +113,6 @@ contains
       p(i+n+ng/2)=p(n-i)
       a(i+n+ng/2)=a(n-i)
     enddo
-
 
 
   end subroutine
