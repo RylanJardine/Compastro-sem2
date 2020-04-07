@@ -1,5 +1,5 @@
 module density
-  ! use set
+  use set
   use set2
   implicit none
   public :: dw
