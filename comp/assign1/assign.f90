@@ -1,7 +1,7 @@
 program assign
   ! Import modules for use
-  ! use set
-  use set2
+  use set
+  ! use set2
   use inout
   use density
   use integrator
@@ -17,15 +17,15 @@ program assign
   integer :: n,ifile,j,ng,i
   real,parameter :: pi=4.*atan(1.)
 
-
-  print*,'Select Standing Wave (1) or Shock Tube Problem (2)'
-  read*,j
-  if (j==1) then
+  ! 
+  ! print*,'Select Standing Wave (1) or Shock Tube Problem (2)'
+  ! read*,j
+  ! if (j==1) then
     ! nx=200
-    ! call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p)
-  else
-    call setup_shock(rho,nx,x,v,xmin,m,cs,n,h,xmax,a,p)
-  endif
+  call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p)
+  ! else
+  !   call setup_shock(rho,nx,x,v,xmin,m,cs,n,h,xmax,a,p)
+  ! endif
   ! call to setup initial conditions at time t=0
 
   ! call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p)
@@ -56,7 +56,7 @@ program assign
 
 
   ifile=0
-  dtout=0.005
+  dtout=0.01
   tprint=ifile*dtout
   print*,tprint
   call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ek,ng)
@@ -65,7 +65,7 @@ program assign
 
   ! print*,'b',rho
 
-  do while (t<0.1)
+  do while (t<5.)
     t=t+dt
     if (t>tprint) then
       ifile=ifile+1

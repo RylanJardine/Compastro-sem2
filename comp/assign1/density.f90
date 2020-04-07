@@ -1,6 +1,6 @@
 module density
-  ! use set
-  use set2
+  use set
+  ! use set2
   implicit none
   public :: dw
 
@@ -227,7 +227,7 @@ contains
 
   real function visc(rho,vab,cs)
     real,intent(in) :: vab,rho,cs
-    real,parameter :: alpha=1.,beta=2.
+    real,parameter :: alpha=0.,beta=0.
     real :: vsig
 
     if (vab<0.) then
