@@ -335,11 +335,7 @@ contains
           if (x(i)+2.*h(i)>xmax) then
             ng=ng+1
             j=n+ng
-            if (y==3) then
-              x(j)=x(i)-(xmax-xmin)
-            else
-              x(j)=x(i)-(xmax-xmin)
-            endif
+            x(j)=x(i)-(xmax-xmin)
             v(j)=v(i)
             h(j)=h(i)
             m(j)=m(i)
@@ -352,11 +348,7 @@ contains
           elseif (x(i)-2.*h(i)<xmin) then
             ng=ng+1
             j=n+ng
-            if (y==3) then
-              x(j)=x(i)+(xmax-xmin)
-            else
-              x(j)=x(i)+(xmax-xmin)
-            endif
+            x(j)=x(i)+(xmax-xmin)
             v(j)=v(i)
             h(j)=h(i)
             m(j)=m(i)
@@ -386,11 +378,11 @@ contains
       end subroutine
 
 
-      subroutine setup(rho,nx,x,v,xmin,m,cs,n,h,xmax,ng,a,p)
+      subroutine setup(rho,nx,x,v,xmin,m,cs,n,h,xmax,ng,a,p,z)
 
         real, intent(out) :: xmax,xmin
         integer,intent(inout) :: n,ng
-        integer,intent(in) :: nx
+        integer,intent(in) :: nx,z
         ! integer, intent(in) :: nx
         real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:)
         real,intent(inout) :: a(:),p(:)
@@ -400,6 +392,8 @@ contains
         integer :: i
         real,parameter :: pi=4.*atan(1.)
         n=100
+        y=z
+        gamma=1.
 
         xmin=0.
         xmax=1.

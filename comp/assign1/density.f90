@@ -114,25 +114,25 @@ contains
     integer,intent(in) :: nx,n,ng
     real,intent(in) :: rho(nx),u(nx)
     real,intent(inout) :: p(nx), cs(nx)
-    real, parameter :: gamma=1.
+    ! real, parameter :: gamma=1.
 
     ! calculate isothermal pressure
     ! p(1:n+ng)=rho(1:n+ng)
 
-    ! if (gamma>1.2) then
-    !   p(1:n+ng)=(gamma-1)*rho(1:n+ng)*u(1:n+ng)
-    !   cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    ! else
-    !   p(1:n+ng)=rho(1:n+ng)
-    !   cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    ! endif
+    if (y==3) then
+      p(1:n+ng)=(gamma-1)*rho(1:n+ng)*u(1:n+ng)
+      cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
+    else
+      p(1:n+ng)=rho(1:n+ng)
+      cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
+    endif
 
     ! if (y==3) then
     !   p(1:n+ng)=(gamma-1)*rho(1:n+ng)*u(1:n+ng)
     !   cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
     ! elseif (y==2) then
-      p(1:n+ng)=rho(1:n+ng)
-      cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
+      ! p(1:n+ng)=rho(1:n+ng)
+      ! cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
     ! endif
 
 
@@ -218,16 +218,21 @@ contains
     integer :: i
     integer,intent(inout) :: ng
 
-    call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-
+    if (y==1) then
+      call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+    else
+      call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+    endif
 
 
     do i=1,3
 
       call get_density(m,x,rho,nx,n,h,ng)
-      call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-
-
+      if (y==1) then
+        call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+      else
+        call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+      endif
 
       h(1:n+ng)=1.2*m(1:n+ng)/rho(1:n+ng)
 
@@ -243,7 +248,7 @@ contains
 
   real function visc(rho,vab,cs)
     real,intent(in) :: vab,rho,cs
-    real,parameter :: alpha=0.,beta=0.
+    real,parameter :: alpha=1.,beta=2.
     real :: vsig
 
     if (vab<0.) then
