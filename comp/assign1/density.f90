@@ -1,6 +1,6 @@
 module density
   use set
-  use set2
+  ! use set2
   implicit none
   public :: dw
 
@@ -114,7 +114,7 @@ contains
     integer,intent(in) :: nx,n,ng
     real,intent(in) :: rho(nx),u(nx)
     real,intent(inout) :: p(nx), cs(nx)
-    ! real, parameter :: gamma=1.4
+    real, parameter :: gamma=1.
 
     ! calculate isothermal pressure
     ! p(1:n+ng)=rho(1:n+ng)
@@ -127,13 +127,13 @@ contains
     !   cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
     ! endif
 
-    if (y==3) then
-      p(1:n+ng)=(gamma-1)*rho(1:n+ng)*u(1:n+ng)
-      cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    elseif (y==2) then
+    ! if (y==3) then
+    !   p(1:n+ng)=(gamma-1)*rho(1:n+ng)*u(1:n+ng)
+    !   cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
+    ! elseif (y==2) then
       p(1:n+ng)=rho(1:n+ng)
       cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    endif
+    ! endif
 
 
   end subroutine
@@ -218,14 +218,14 @@ contains
     integer :: i
     integer,intent(inout) :: ng
 
-    call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+    call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
 
 
     do i=1,3
 
       call get_density(m,x,rho,nx,n,h,ng)
-      call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+      call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
 
 

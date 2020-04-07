@@ -96,6 +96,7 @@ contains
       h(i)=h(i-n+1)
       p(i)=p(i-n+1)
       a(i)=a(i-n+1)
+
     enddo
 
 
