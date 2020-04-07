@@ -1,16 +1,16 @@
 module set
   implicit none
-
+  ! real :: gamma
   ! use set_ghosts: only xmin,xmax
 
 contains
-  subroutine setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p)
+  subroutine setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p,u)
 
     real, intent(out) :: xmax,xmin
     integer,intent(inout) :: n,ng
     integer,intent(in) :: nx
     ! integer, intent(in) :: nx
-    real,intent(out) :: x(:),m(:),v(:),h(:),dx,rho(:),cs(:)
+    real,intent(out) :: x(:),m(:),v(:),h(:),dx,rho(:),cs(:),u(:)
     real,intent(inout) :: a(:),p(:)
     ! real, intent (inout) :: a(n)
 
@@ -26,7 +26,7 @@ contains
     ! print*,rho(:), 5
     x(1)=xmin
 
-
+    ! gamma=1.
     v(1)=0.
 
 
@@ -43,7 +43,7 @@ contains
 
     m(1:n)=rho(1:n)*dx
 
-
+    u(1:n)=1.
     ! call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
   end subroutine
@@ -59,7 +59,7 @@ contains
     real :: l
 
     integer :: i
-    ! real,parameter :: pi=4.*atan(1.)
+    ! real,paramset2.f90eter :: pi=4.*atan(1.)
 
     ! ng=(nx-n)/2
     ! h(n:)=1.2*dx

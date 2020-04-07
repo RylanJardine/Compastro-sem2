@@ -8,7 +8,7 @@ contains
     real, intent(inout) :: x(nx),v(nx),a(nx),h(nx),rho(nx),m(nx),p(nx),cs(nx),dx,du(nx),u(nx)
     real :: vs(nx),dt,a0(nx),du0(nx)
     integer,intent(inout) :: ng
-    ! dt=0.001
+    
     dt=0.2*minval(h(1:n)/cs(1:n))
     ! dt=0.001
 

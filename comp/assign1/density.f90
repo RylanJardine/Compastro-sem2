@@ -1,5 +1,5 @@
 module density
-  use set
+  ! use set
   use set2
   implicit none
   public :: dw
@@ -130,9 +130,10 @@ contains
     if (y==3) then
       p(1:n+ng)=(gamma-1)*rho(1:n+ng)*u(1:n+ng)
       cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    elseif (y==2) then
+    else
       p(1:n+ng)=rho(1:n+ng)
       cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
+      ! print*,gamma
     endif
 
 
@@ -243,7 +244,7 @@ contains
 
   real function visc(rho,vab,cs)
     real,intent(in) :: vab,rho,cs
-    real,parameter :: alpha=0.,beta=0.
+    real,parameter :: alpha=1.,beta=2.
     real :: vsig
 
     if (vab<0.) then
