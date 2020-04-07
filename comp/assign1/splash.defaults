@@ -16,7 +16,7 @@
   7*1          ,
  IPLOTPARTOFTYPE=T, 11*F,
  PLOTONRENDERINGS= 12*F,
- IEXACT=3          ,
+ IEXACT=0          ,
  ICOORDSNEW=1          ,
  IFASTPARTICLEPLOT=T,
  IDEFAULTCOLOURTYPE= 12*-1         ,
@@ -34,8 +34,8 @@
  /
 &PAGEOPTS
  IAXIS=0          ,
- NACROSS=2          ,
- NDOWN=2          ,
+ NACROSS=1          ,
+ NDOWN=1          ,
  INTERACTIVE=T,
  IADAPT=F,
  IADAPTCOORDS=F,
@@ -168,7 +168,7 @@
  IEXACTPLOTY= 10*0          ,
  FILENAME_EXACT= 10*'                                                                                                                        ',
  MAXEXACTPTS=1001       ,
- IEXACTLINECOLOUR=3          , 9*1          ,
+ IEXACTLINECOLOUR= 10*1          ,
  IEXACTLINESTYLE=1          ,2          ,3          ,4          ,5          ,
  0          ,1          ,2          ,3          ,4          ,
  IAPPLYTRANSEXACTFILE=T,
@@ -237,8 +237,8 @@
  XPRIM= 3*0.00000000      ,
  XSEC=  1.00000000    , 2*0.00000000      ,
  NFILES=1          ,
- GAMMA_EXACT=  1.39999998    ,
- USE_GAMMA_EXACT=T,
+ GAMMA_EXACT=  1.66666663    ,
+ USE_GAMMA_EXACT=F,
  HONR=  5.00000007E-02,
  RPLANET=  1.00000000    ,
  Q_INDEX= 0.250000000    ,
@@ -258,7 +258,7 @@
  NYPLOTMULTI=4          ,
  ITRANS= 512*0          ,
  MULTIPLOTX= 512*1          ,
- MULTIPLOTY=2          ,4          ,6          ,9          , 508*0          ,
+ MULTIPLOTY=2          ,3          ,4          ,5          , 508*0          ,
  
  IRENDERMULTI= 512*0          ,
  IVECPLOTMULTI= 512*0          ,
@@ -792,33 +792,3 @@ snap_00008
 snap_00009
 snap_00010
 snap_00011
-snap_00012
-snap_00013
-snap_00014
-snap_00015
-snap_00016
-snap_00017
-snap_00018
-snap_00019
-snap_00020
-snap_00021
-snap_00022
-snap_00023
-snap_00024
-snap_00025
-snap_00026
-snap_00027
-snap_00028
-snap_00029
-snap_00030
-snap_00031
-snap_00032
-snap_00033
-snap_00034
-snap_00035
-snap_00036
-snap_00037
-snap_00038
-snap_00039
-snap_00040
-snap_00041

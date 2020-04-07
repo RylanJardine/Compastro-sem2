@@ -109,42 +109,27 @@ contains
   end subroutine
 
 
-  subroutine equation_of_state(cs,rho,p,nx,n,ng,u)
+  subroutine equation_of_state(cs,rho,p,nx,n,ng)
     ! setup density, pressure and sound speed arrays
     integer,intent(in) :: nx,n,ng
-    real,intent(in) :: rho(nx),u(nx)
+    real,intent(in) :: rho(nx)
     real,intent(inout) :: p(nx), cs(nx)
-    ! real, parameter :: gamma=1.4
+    real, parameter :: gamma=1.
 
     ! calculate isothermal pressure
-    ! p(1:n+ng)=rho(1:n+ng)
-
-    ! if (gamma>1.2) then
-    !   p(1:n+ng)=(gamma-1)*rho(1:n+ng)*u(1:n+ng)
-    !   cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    ! else
-    !   p(1:n+ng)=rho(1:n+ng)
-    !   cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    ! endif
-
-    if (y==3) then
-      p(1:n+ng)=(gamma-1)*rho(1:n+ng)*u(1:n+ng)
-      cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    elseif (y==2) then
-      p(1:n+ng)=rho(1:n+ng)
-      cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    endif
+    p(1:n+ng)=rho(1:n+ng)
+    cs(1:n+ng)=sqrt(p(1:n+ng)/rho(1:n+ng))
 
 
   end subroutine
 
-  subroutine get_accel(rho,p,n,a,nx,x,m,h,v,cs,ng,du)
+  subroutine get_accel(rho,p,n,a,nx,x,m,h,v,cs,ng)
     integer,intent(in) :: n,nx,ng
     real,intent(in) :: rho(nx),m(nx),v(nx),cs(nx)
     real,intent(inout) ::  p(nx),x(nx),h(nx)
-    real, intent(out) :: a(nx),du(nx)
+    real, intent(out) :: a(nx)
     integer :: i,j
-    real :: qa,qb,ap(nx),vab,dub(nx)
+    real :: qa,qb,ap(nx),vab
 
     ! qa=0.
     ! qb=0.
@@ -152,7 +137,6 @@ contains
     do i=1,n+ng
 
       a(i)=0.
-      du(i)=0.
         ! compute the indivdual terms of the density sum
         do j=1,n+ng
           vab=(v(i)-v(j))*((x(i)-x(j))/abs(x(i)-x(j)))
@@ -161,8 +145,7 @@ contains
           ap(j)=m(j)*((p(i)+qa)/rho(i)**2*dw(x(i),x(j),h(i),j)+(p(j)+qb)/rho(j)**2*dw(x(i),x(j),h(j),j))
           a(i)=a(i)-ap(j)
 
-          dub(j)=m(j)*(p(i)+qa)/rho(i)**2*(v(i)-v(j))*dw(x(i),x(j),h(i),j)
-          du(i)=du(i)+dub(j)
+          ! du(i)=m(j)*(p(i)+qa)/rho(i)**2*(v(i)-v(j))*dw(x(i),x(j),h(i))
         enddo
         ! sum over all elements to find density per particle
         ! a(i)=-sum(ap(1:n+ng))
@@ -210,40 +193,41 @@ contains
   end function
 
 
-  subroutine derivs(cs,rho,p,n,a,nx,x,m,h,dx,v,ng,du,u)
+  subroutine derivs(cs,rho,p,n,a,nx,x,m,h,dx,v,ng)
     integer,intent(in) :: n,nx
     real, intent(in) ::  dx
-    real, intent(inout) :: rho(nx), cs(nx),p(nx), x(nx),h(nx),v(nx),m(nx),du(nx),u(nx)
+    real, intent(inout) :: rho(nx), cs(nx),p(nx), x(nx),h(nx),v(nx),m(nx)
     real,intent(out) :: a(nx)
     integer :: i
     integer,intent(inout) :: ng
 
-    call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+    call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
 
 
     do i=1,3
 
       call get_density(m,x,rho,nx,n,h,ng)
-      call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+      call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
 
 
 
       h(1:n+ng)=1.2*m(1:n+ng)/rho(1:n+ng)
 
     enddo
+    ! call get_density(m,x,rho,nx,n,h)
+    ! call set_ghosts(rho,nx,x,v,dx,m,cs,n,h)
 
+    call equation_of_state(cs,rho,p,nx,n,ng)
 
-    call equation_of_state(cs,rho,p,nx,n,ng,u)
-
-    call get_accel(rho,p,n,a,nx,x,m,h,v,cs,ng,du)
+    call get_accel(rho,p,n,a,nx,x,m,h,v,cs,ng)
 
 
   end subroutine
 
   real function visc(rho,vab,cs)
     real,intent(in) :: vab,rho,cs
-    real,parameter :: alpha=0.,beta=0.
+    real,parameter :: alpha=1.,beta=2.
     real :: vsig
 
     if (vab<0.) then
@@ -252,7 +236,6 @@ contains
     else
       visc=0.
     endif
-
 
   end function
 
