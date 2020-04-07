@@ -13,7 +13,7 @@ program assign
   real :: x(nx), v(nx), m(nx), rho(nx),  p(nx), cs(nx),h(nx),a(nx), ek,po,mt,du(nx),u(nx)
   ! real :: u(nx)
   ! define the max and min of your grid and number of particles, n
-  real :: xmax,xmin,t,dt,tprint,dtout,b,tstop
+  real :: t,dt,tprint,dtout,b,tstop
   integer :: n,ifile,z,ng,i
   real,parameter :: pi=4.*atan(1.)
 
@@ -25,14 +25,20 @@ program assign
 
   print*,'Select Standing Wave (1), Isothermal Shock tube (2) or Adiabatic Shock Tube Problem (3)'
   read*,z
+  ! if (z==1) then
+  !   call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p,u,z)
+  !   tstop=5.
+  ! else if ((z==2) .or. (z==3)) then
+  !   call setup_shock(rho,nx,x,v,xmin,m,cs,n,h,xmax,a,p,u,z)
+  !   tstop=0.2
+  ! else
+  !   print*, 'Please Select (1),(2) or (3)'
+  ! endif
+  call setup_shock(rho,nx,x,v,m,cs,n,h,a,p,u,z)
   if (z==1) then
-    call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p,u,z)
     tstop=5.
-  else if ((z==2) .or. (z==3)) then
-    call setup_shock(rho,nx,x,v,xmin,m,cs,n,h,xmax,a,p,u,z)
-    tstop=0.2
   else
-    print*, 'Please Select (1),(2) or (3)'
+    tstop=0.2
   endif
 
   ! print*, 'Add viscosity? (yes/no)'

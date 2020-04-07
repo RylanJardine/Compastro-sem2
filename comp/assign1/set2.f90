@@ -1,14 +1,14 @@
 module set2
   implicit none
   real :: dx,dx2
-  real :: gamma
+  real :: gamma,xmax,xmin
   integer :: y
 
 
 contains
-  subroutine setup_shock(rho,nx,x,v,xmin,m,cs,n,h,xmax,a,p,u,z)
+  subroutine setup_shock(rho,nx,x,v,m,cs,n,h,a,p,u,z)
 
-        real, intent(out) :: xmax,xmin
+        ! real, intent(out) :: xmax,xmin
         integer,intent(inout) :: n
         integer,intent(in) :: nx,z
         real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:),a(:),p(:),u(:)
@@ -227,54 +227,86 @@ contains
             dx2=0.008
             gamma=1.4
           endif
-          xmin=-1.5
-          xmid=-1.
-          xmid2=0.
-          xmax=0.5
-          len=xmax-xmin
-          xmin2=-0.5
-          n_1=nint(abs(xmax)/dx)
-          n_2=nint(abs(xmin2)/dx2)
 
-          do i=1,n_2
-            x(i)=xmin+(i-0.5)*dx2
-            v(i) = 0.
-            m(i) = dx
-            h(i) = 1.2*dx2
-            rho(i) = 0.125
-            a(i) = 0.
-            cs(i) = 1.
-            p(i) =0.1
-          enddo
+          if ((z==2) .or. (z==3)) then
+            xmin=-1.5
+            xmid=-1.
+            xmid2=0.
+            xmax=0.5
+            len=xmax-xmin
+            xmin2=-0.5
+            n_1=nint(abs(xmax)/dx)
+            n_2=nint(abs(xmin2)/dx2)
 
-          l=n_2
-          do i=1,2*n_1
-            x(l+i)=xmid2-(i-0.5)*dx
-              v(l+i) = 0.
-              m(l+i) = dx
-              h(l+i) = 1.2*dx
-              cs(l+i) = 1.
-              a(l+i) = 0.
-              p(l+i) = 1.
-              rho(l+i) = 1.
-          enddo
+            do i=1,n_2
+              x(i)=xmin+(i-0.5)*dx2
+              v(i) = 0.
+              m(i) = dx
+              h(i) = 1.2*dx2
+              rho(i) = 0.125
+              a(i) = 0.
+              cs(i) = 1.
+              p(i) =0.1
+            enddo
 
-          g=2*n_1+n_2
-          do i=1,n_2
-            x(g+i)=xmax-(i-0.5)*dx2
-            v(g+i) = 0.
-            m(g+i) = dx
-            h(g+i) = 1.2*dx2
-            rho(g+i) = 0.125
-            a(g+i) = 0.
-            cs(g+i) = 1.
-            p(g+i) =0.1
-          enddo
-          n=2*n_1+2*n_2
-          u(1:n)=p(1:n)/((gamma-1)*rho(1:n))
-          print*,n,n_1,n_2
+            l=n_2
+            do i=1,2*n_1
+              x(l+i)=xmid2-(i-0.5)*dx
+                v(l+i) = 0.
+                m(l+i) = dx
+                h(l+i) = 1.2*dx
+                cs(l+i) = 1.
+                a(l+i) = 0.
+                p(l+i) = 1.
+                rho(l+i) = 1.
+            enddo
+
+            g=2*n_1+n_2
+            do i=1,n_2
+              x(g+i)=xmax-(i-0.5)*dx2
+              v(g+i) = 0.
+              m(g+i) = dx
+              h(g+i) = 1.2*dx2
+              rho(g+i) = 0.125
+              a(g+i) = 0.
+              cs(g+i) = 1.
+              p(g+i) =0.1
+            enddo
+            n=2*n_1+2*n_2
+            u(1:n)=p(1:n)/((gamma-1)*rho(1:n))
+            print*,n,n_1,n_2
+          endif
+
+          if (z==1) then
+            n=100
+            gamma=1.
+            xmin=0.
+            xmax=1.
+            cs(1:n)=1.
+            rho(1:n)=1.
+            ! print*,rho(:), 5
+            x(1)=xmin
+
+            ! gamma=1.
+            v(1)=0.
 
 
+            dx=(xmax-xmin)/(n-1)
+
+            h(1:n)=1.2*dx
+            do i=2,n
+
+              x(i)=x(i-1)+dx
+              ! x(i)=xmin+(i-0.5)*dx
+              v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
+
+            enddo
+
+            m(1:n)=rho(1:n)*dx
+
+            u(1:n)=1.
+
+          endif
 
       end subroutine
 
@@ -284,7 +316,7 @@ contains
         integer,intent(out) ::ng
         real,intent(inout) :: rho(nx),cs(nx),a(nx),p(nx),u(nx),du(nx)
         real,intent(out) :: x(nx),m(nx),v(nx),h(nx)
-        real,parameter :: xmax=0.5,xmin=-1.5
+        ! real,parameter :: xmax=0.5,xmin=-1.5
         real :: l
 
         integer :: i,j
@@ -382,51 +414,51 @@ contains
         ! enddo
 
       end subroutine
-
-      subroutine setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p,u,z)
-
-        real, intent(out) :: xmax,xmin
-        integer,intent(inout) :: n,ng
-        integer,intent(in) :: nx,z
-        ! integer, intent(in) :: nx
-        real,intent(out) :: x(:),m(:),v(:),h(:),dx,rho(:),cs(:),u(:)
-        real,intent(inout) :: a(:),p(:)
-        ! real, intent (inout) :: a(n)
-
-
-        integer :: i
-        real,parameter :: pi=4.*atan(1.)
-        y=z
-        n=100
-        gamma=1.
-        xmin=0.
-        xmax=1.
-        cs(1:n)=1.
-        rho(1:n)=1.
-        ! print*,rho(:), 5
-        x(1)=xmin
-
-        ! gamma=1.
-        v(1)=0.
-
-
-        dx=(xmax-xmin)/(n-1)
-
-        h(1:n)=1.2*dx
-        do i=2,n
-
-          x(i)=x(i-1)+dx
-          ! x(i)=xmin+(i-0.5)*dx
-          v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
-
-        enddo
-
-        m(1:n)=rho(1:n)*dx
-
-        u(1:n)=1.
-        ! call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
-
-      end subroutine
+      !
+      ! subroutine setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p,u,z)
+      !
+      !   real, intent(out) :: xmax,xmin
+      !   integer,intent(inout) :: n,ng
+      !   integer,intent(in) :: nx,z
+      !   ! integer, intent(in) :: nx
+      !   real,intent(out) :: x(:),m(:),v(:),h(:),dx,rho(:),cs(:),u(:)
+      !   real,intent(inout) :: a(:),p(:)
+      !   ! real, intent (inout) :: a(n)
+      !
+      !
+      !   integer :: i
+      !   real,parameter :: pi=4.*atan(1.)
+      !   y=z
+      !   n=100
+      !   gamma=1.
+      !   xmin=0.
+      !   xmax=1.
+      !   cs(1:n)=1.
+      !   rho(1:n)=1.
+      !   ! print*,rho(:), 5
+      !   x(1)=xmin
+      !
+      !   ! gamma=1.
+      !   v(1)=0.
+      !
+      !
+      !   dx=(xmax-xmin)/(n-1)
+      !
+      !   h(1:n)=1.2*dx
+      !   do i=2,n
+      !
+      !     x(i)=x(i-1)+dx
+      !     ! x(i)=xmin+(i-0.5)*dx
+      !     v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
+      !
+      !   enddo
+      !
+      !   m(1:n)=rho(1:n)*dx
+      !
+      !   u(1:n)=1.
+      !   ! call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
+      !
+      ! end subroutine
 
       !
       ! subroutine set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
