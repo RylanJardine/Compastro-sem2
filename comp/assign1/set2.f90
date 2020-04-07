@@ -295,7 +295,7 @@ contains
         ! dx=0.001
         ! dx2=0.008
         !
-
+        l=xmax-xmin
         ! ng=20
         !
         !
@@ -329,10 +329,9 @@ contains
         ! print*,x(n:n+ng)
 
         !
-        l=xmax-xmin
         ng=0
         do i=1,n
-          if (x(i)+2.*h(i)>xmax) then
+          if (x(i)+3.*h(i)>xmax) then
             ng=ng+1
             j=n+ng
             if (y==3) then
@@ -349,7 +348,7 @@ contains
             cs(j)=cs(i)
             u(j)=u(i)
             du(j)=du(i)
-          elseif (x(i)-2.*h(i)<xmin) then
+          elseif (x(i)-3.*h(i)<xmin) then
             ng=ng+1
             j=n+ng
             if (y==3) then

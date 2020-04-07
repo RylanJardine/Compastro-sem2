@@ -88,6 +88,7 @@ contains
 
     ! the ghost points which lead immediately after the particles e.g. 101, 102 ...
     do i=n+1,n+ng/2
+      ! x(i)=x(i-1)+dx
       x(i)=x(i-n+1)+l
       v(i)=v(i-n+1)
       rho(i)=rho(i-n+1)
@@ -101,7 +102,9 @@ contains
 
     ! the ghost particles which exist before the first particles e.g. -1, -2...
     do i=1,ng/2
+      ! x(i+n+ng)=-dx*i
       x(i+n+ng/2)=x(n-i)-l
+      ! x(i+n+ng)=x(1)-dx*i
       v(i+n+ng/2)=v(n-i)
       rho(i+n+ng/2)=rho(n-i)
       m(i+n+ng/2)=m(n-i)
