@@ -2,14 +2,13 @@ module set2
 
   implicit none
   real :: dx,dx2
-  real :: gamma
+  real :: gamma,xmax,xmin
   integer :: y
 
 
 contains
-  subroutine setup_shock(rho,nx,x,v,xmin,m,cs,n,h,xmax,a,p,u,z)
+  subroutine setup_shock(rho,nx,x,v,m,cs,n,h,a,p,u,z)
 
-        real, intent(out) :: xmax,xmin
         integer,intent(inout) :: n
         integer,intent(in) :: nx,z
         real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:),a(:),p(:),u(:)
@@ -286,7 +285,7 @@ contains
         integer,intent(out) ::ng
         real,intent(inout) :: rho(nx),cs(nx),a(nx),p(nx),u(nx),du(nx)
         real,intent(out) :: x(nx),m(nx),v(nx),h(nx)
-        real,parameter :: xmax=0.5,xmin=-1.5
+
         real :: l
 
         integer :: i,j
@@ -378,13 +377,12 @@ contains
       end subroutine
 
 
-      subroutine setup(rho,nx,x,v,xmin,m,cs,n,h,xmax,ng,a,p,z)
+      subroutine setup(rho,nx,x,v,m,cs,n,h,ng,a,p,u,z)
 
-        real, intent(out) :: xmax,xmin
         integer,intent(inout) :: n,ng
         integer,intent(in) :: nx,z
         ! integer, intent(in) :: nx
-        real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:)
+        real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:),u(:)
         real,intent(inout) :: a(:),p(:)
         ! real, intent (inout) :: a(n)
 
@@ -400,23 +398,23 @@ contains
         cs(1:n)=1.
         rho(1:n)=1.
         ! print*,rho(:), 5
-        x(1)=xmin
+        ! x(1)=xmin
 
 
-        v(1)=0.
+        ! v(1)=0.
 
 
-        dx=(xmax-xmin)/(n-1)
+        dx=(xmax-xmin)/(n)
 
         h(1:n)=1.2*dx
-        do i=2,n
+        do i=1,n
 
-          x(i)=x(i-1)+dx
-          ! x(i)=xmin+(i-0.5)*dx
+          ! x(i)=x(i-1)+dx
+          x(i)=xmin+(i-0.5)*dx
           v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
 
         enddo
-
+        u(1:n)=1.
         m(1:n)=rho(1:n)*dx
 
 

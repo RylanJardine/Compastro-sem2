@@ -218,21 +218,22 @@ contains
     integer :: i
     integer,intent(inout) :: ng
 
-    if (y==1) then
-      call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-    else
-      call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-    endif
-
+    ! if (y==1) then
+    !   call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+    ! else
+    !   call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+    ! endif
+    call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
 
     do i=1,3
 
       call get_density(m,x,rho,nx,n,h,ng)
-      if (y==1) then
-        call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-      else
-        call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-      endif
+      call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+      ! if (y==1) then
+      !   call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+      ! else
+      !   call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+      ! endif
 
       h(1:n+ng)=1.2*m(1:n+ng)/rho(1:n+ng)
 
