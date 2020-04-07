@@ -49,11 +49,11 @@ contains
   end subroutine
 
 
-  subroutine set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
+  subroutine set_ghosts2(rho,nx,x,v,dx,m,cs,n,h,a,p,ng,u,du)
     real, intent(in) :: dx
     integer,intent(in) :: n,nx
     integer,intent(out) ::ng
-    real,intent(inout) :: rho(nx),cs(nx),a(nx),p(nx)
+    real,intent(inout) :: rho(nx),cs(nx),a(nx),p(nx),u(nx),du(nx)
     real,intent(out) :: x(nx),m(nx),v(nx),h(nx)
     real,parameter :: xmax=1.,xmin=0.
     real :: l
@@ -96,6 +96,8 @@ contains
       h(i)=h(i-n+1)
       p(i)=p(i-n+1)
       a(i)=a(i-n+1)
+      u(i)=u(i-n+1)
+      du(i)=du(i-n+1)
 
     enddo
 
@@ -110,6 +112,8 @@ contains
       h(i+n+ng/2)=h(n-i)
       p(i+n+ng/2)=p(n-i)
       a(i+n+ng/2)=a(n-i)
+      u(i+n+ng/2)=u(n-i)
+      du(i+n+ng/2)=du(n-i)
     enddo
 
 

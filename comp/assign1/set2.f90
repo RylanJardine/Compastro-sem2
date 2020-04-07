@@ -280,7 +280,7 @@ contains
 
       end subroutine
 
-      subroutine set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+      subroutine set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
         ! real, intent(in) :: dx
         integer,intent(in) :: n,nx
         integer,intent(out) ::ng
@@ -385,6 +385,121 @@ contains
 
       end subroutine
 
+
+      subroutine setup(rho,nx,x,v,xmin,m,cs,n,h,xmax,ng,a,p)
+
+        real, intent(out) :: xmax,xmin
+        integer,intent(inout) :: n,ng
+        integer,intent(in) :: nx
+        ! integer, intent(in) :: nx
+        real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:)
+        real,intent(inout) :: a(:),p(:)
+        ! real, intent (inout) :: a(n)
+
+
+        integer :: i
+        real,parameter :: pi=4.*atan(1.)
+        n=100
+
+        xmin=0.
+        xmax=1.
+        cs(1:n)=1.
+        rho(1:n)=1.
+        ! print*,rho(:), 5
+        x(1)=xmin
+
+
+        v(1)=0.
+
+
+        dx=(xmax-xmin)/(n-1)
+
+        h(1:n)=1.2*dx
+        do i=2,n
+
+          x(i)=x(i-1)+dx
+          ! x(i)=xmin+(i-0.5)*dx
+          v(i)=cs(i)*10.**(-4)*sin(2*pi*x(i))
+
+        enddo
+
+        m(1:n)=rho(1:n)*dx
+
+
+        ! call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
+
+      end subroutine
+
+
+      subroutine set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+        ! real, intent(in) :: dx
+        integer,intent(in) :: n,nx
+        integer,intent(out) ::ng
+        real,intent(inout) :: rho(nx),cs(nx),a(nx),p(nx),u(nx),du(nx)
+        real,intent(out) :: x(nx),m(nx),v(nx),h(nx)
+        real,parameter :: xmax=1.,xmin=0.
+        real :: l
+
+        integer :: i
+        ! real,parameter :: pi=4.*atan(1.)
+
+        ! ng=(nx-n)/2
+        ! h(n:)=1.2*dx
+        ! cs(n:)=1.
+        l=xmax-xmin
+        ng=20
+
+        ! ng=(nx-n)/2
+        ! h(n:)=1.2*dx
+        ! cs(n:)=1.
+
+        !
+        ! ng=0
+        ! do i=1,n
+        !   if (x(i)+2*h(i)>xmax) then
+        !     ng=ng+1
+        !     x(n+ng)=x(i)-(xmax-xmin)
+        !   elseif (x(i)-2*h(i)<xmin) then
+        !     ng=ng+1
+        !     x(n+ng)=x(i)+(xmax-xmin)
+        !   endif
+        ! enddo
+        !
+        ! print*,x
+
+
+        ! the ghost points which lead immediately after the particles e.g. 101, 102 ...
+        do i=n+1,n+ng/2
+          x(i)=x(i-n+1)+l
+          v(i)=v(i-n+1)
+          rho(i)=rho(i-n+1)
+          m(i)=m(i-n+1)
+          cs(i)=cs(i-n+1)
+          h(i)=h(i-n+1)
+          p(i)=p(i-n+1)
+          a(i)=a(i-n+1)
+          u(i)=u(i-n+1)
+          du(i)=du(i-n+1)
+
+        enddo
+
+
+        ! the ghost particles which exist before the first particles e.g. -1, -2...
+        do i=1,ng/2
+          x(i+n+ng/2)=x(n-i)-l
+          v(i+n+ng/2)=v(n-i)
+          rho(i+n+ng/2)=rho(n-i)
+          m(i+n+ng/2)=m(n-i)
+          cs(i+n+ng/2)=cs(n-i)
+          h(i+n+ng/2)=h(n-i)
+          p(i+n+ng/2)=p(n-i)
+          a(i+n+ng/2)=a(n-i)
+          u(i+n+ng/2)=u(n-i)
+          du(i+n+ng/2)=du(n-i)
+        enddo
+
+
+      end subroutine
 
 
 end module

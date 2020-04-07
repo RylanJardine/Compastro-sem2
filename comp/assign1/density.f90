@@ -1,6 +1,6 @@
 module density
-  use set
-  ! use set2
+  ! use set
+  use set2
   implicit none
   public :: dw
 
@@ -218,14 +218,14 @@ contains
     integer :: i
     integer,intent(inout) :: ng
 
-    call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
+    call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
 
 
 
     do i=1,3
 
       call get_density(m,x,rho,nx,n,h,ng)
-      call set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
+      call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
 
 
 
