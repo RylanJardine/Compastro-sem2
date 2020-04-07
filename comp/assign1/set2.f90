@@ -1,17 +1,22 @@
 module set2
+
   implicit none
+  real :: dx,dx2
+  real :: gamma
+  integer :: y
 
 
 contains
-  subroutine setup_shock(rho,nx,x,v,xmin,m,cs,n,h,xmax,a,p)
+  subroutine setup_shock(rho,nx,x,v,xmin,m,cs,n,h,xmax,a,p,u,z)
 
         real, intent(out) :: xmax,xmin
         integer,intent(inout) :: n
-        integer,intent(in) :: nx
-        real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:),a(:),p(:)
-        integer :: l,k,i,g
+        integer,intent(in) :: nx,z
+        real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:),a(:),p(:),u(:)
+        integer :: l,k,i,g,n_1,n_2
         real,parameter :: pi=4.*atan(1.)
-        real :: dx, dx2,x2,x3,x1,xmid,xmid2,len
+        real :: x2,x3,x1,xmid,xmid2,len,xmin2
+        y=z
         !
         ! xmin=-1.5
         ! xmax=0.5
@@ -83,7 +88,7 @@ contains
           ! rho_l = 1.
           ! rho_r = 0.1
           ! dx_l = 0.001
-          ! dx_r = 0.01
+          ! dx_r = 0.008
           ! xmin = -0.5
           ! xmax = 0.5
           ! middle = 0
@@ -91,10 +96,10 @@ contains
           ! n_r = nint(abs(xmin)/dx_r)  !50
           ! n = 2*n_l + 2*n_r
           ! b= middle
-          !
-          !
-          !
-          !
+
+
+
+
           ! do i = 1,n_l
           !   !for left hand side start at -0.5 and go to 0 (500)
           !   b = xmin + (i-0.5)*dx_l
@@ -115,7 +120,7 @@ contains
           !   v(i) = 0.
           !   m(i) = dx_l
           !   h(i) = 1.2*dx_r
-          !   rho(i) = 0.1
+          !   rho(i) = 0.125
           !   a(i) = 0.
           !   cs(i) = 1.
           !   p(i) =0.1
@@ -142,35 +147,111 @@ contains
           !   v(i) = 0.
           !   m(i) = dx_l
           !   h(i) = 1.2*dx_r
+          !   rho(i) = 0.125
+          !   a(i) = 0.
+          !   cs(i) = 1.
+          !   p(i) =0.1
+          ! enddo
+          ! u(1:n)=p(1:n)/((gamma-1)*rho(1:n))
+
+
+          ! !isothermal
+          ! n=1100
+          ! xmin=-1.5
+          ! xmid=-1.
+          ! xmid2=0.
+          ! xmax=0.5
+          ! len=xmax-xmin
+          ! dx=0.001
+          ! dx2=0.01
+          !
+          ! do i=1,50
+          !   x(i)=xmin+(i-0.5)*dx2
+          !   v(i) = 0.
+          !   m(i) = dx
+          !   h(i) = 1.2*dx2
           !   rho(i) = 0.1
           !   a(i) = 0.
           !   cs(i) = 1.
           !   p(i) =0.1
           ! enddo
+          !
+          ! l=50
+          ! do i=1,1000
+          !   x(l+i)=xmid+(i-0.5)*dx
+          !     v(l+i) = 0.
+          !     m(l+i) = dx
+          !     h(l+i) = 1.2*dx
+          !     cs(l+i) = 1.
+          !     a(l+i) = 0.
+          !     p(l+i) = 1.
+          !     rho(l+i) = 1.
+          ! enddo
+          !
+          ! g=1050
+          ! do i=1,50
+          !   x(g+i)=xmid2+(i-0.5)*dx2
+          !   v(g+i) = 0.
+          !   m(g+i) = dx
+          !   h(g+i) = 1.2*dx2
+          !   rho(g+i) = 0.1
+          !   a(g+i) = 0.
+          !   cs(g+i) = 1.
+          !   p(g+i) =0.1
+          ! enddo
+          ! u(1:n)=p(1:n)/((gamma-1)*rho(1:n))
 
-          n=1100
+          ! Not isothermal
+
+          ! integer ::  n_l, n_r
+          ! real :: rho_l, rho_r, dx_l, dx_r, b
+          ! real :: middle
+          !
+          ! rho_l = 1.
+          ! rho_r = 0.1
+          ! dx_l = 0.001
+          ! dx_r = 0.008
+          ! xmin = -0.5
+          ! xmax = 0.5
+          ! middle = 0
+          ! n_l = nint(abs(xmax)/dx_l)  !500
+          ! n_r = nint(abs(xmin)/dx_r)  !50
+          ! n = 2*n_l + 2*n_r
+          ! b= middle
+
+          if (z==2) then
+            dx=0.001
+            dx2=0.01
+            gamma=1.
+          else if (z==3) then
+            dx=0.001
+            dx2=0.008
+            gamma=1.4
+          endif
+
           xmin=-1.5
           xmid=-1.
           xmid2=0.
           xmax=0.5
           len=xmax-xmin
-          dx=0.001
-          dx2=0.01
+          xmin2=-0.5
+          n_1=nint(abs(xmax)/dx)
+          n_2=nint(abs(xmin2)/dx2)
 
-          do i=1,50
+          do i=1,n_2
             x(i)=xmin+(i-0.5)*dx2
             v(i) = 0.
             m(i) = dx
             h(i) = 1.2*dx2
-            rho(i) = 0.1
+            rho(i) = 0.125
             a(i) = 0.
             cs(i) = 1.
             p(i) =0.1
           enddo
 
-          l=50
-          do i=1,1000
-            x(l+i)=xmid+(i-0.5)*dx
+          l=n_2
+          do i=1,2*n_1
+            x(l+i)=xmid2-(i-0.5)*dx
               v(l+i) = 0.
               m(l+i) = dx
               h(l+i) = 1.2*dx
@@ -180,42 +261,42 @@ contains
               rho(l+i) = 1.
           enddo
 
-          g=1050
-          do i=1,50
-            x(g+i)=xmid2+(i-0.5)*dx2
+          g=2*n_1+n_2
+          do i=1,n_2
+            x(g+i)=xmax-(i-0.5)*dx2
             v(g+i) = 0.
             m(g+i) = dx
             h(g+i) = 1.2*dx2
-            rho(g+i) = 0.1
+            rho(g+i) = 0.125
             a(g+i) = 0.
             cs(g+i) = 1.
             p(g+i) =0.1
           enddo
-
-          ! print*,x(1:n)
-          ! read*,
+          n=2*n_1+2*n_2
+          u(1:n)=p(1:n)/((gamma-1)*rho(1:n))
+          print*,n,n_1,n_2
 
 
 
       end subroutine
 
-      subroutine set_ghosts(rho,nx,x,v,dx,m,cs,n,h,a,p,ng)
+      subroutine set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
         ! real, intent(in) :: dx
         integer,intent(in) :: n,nx
         integer,intent(out) ::ng
-        real,intent(inout) :: rho(nx),cs(nx),a(nx),p(nx)
+        real,intent(inout) :: rho(nx),cs(nx),a(nx),p(nx),u(nx),du(nx)
         real,intent(out) :: x(nx),m(nx),v(nx),h(nx)
         real,parameter :: xmax=0.5,xmin=-1.5
         real :: l
 
         integer :: i,j
 
-        real :: dx,dx2
-        dx=0.001
-        dx2=0.01
+        ! real :: dx,dx2
+        ! dx=0.001
+        ! dx2=0.008
         !
         l=xmax-xmin
-        ng=20
+        ! ng=20
         !
         !
         ! ! the ghost points which lead immediately after the particles e.g. 101, 102 ...
@@ -250,10 +331,14 @@ contains
         !
         ng=0
         do i=1,n
-          if (x(i)+2.*h(i)>xmax) then
+          if (x(i)+3.*h(i)>xmax) then
             ng=ng+1
             j=n+ng
-            x(j)=x(i)-(xmax-xmin)
+            if (y==3) then
+              x(j)=x(i)-(xmax-xmin)
+            else
+              x(j)=x(i)-(xmax-xmin)
+            endif
             v(j)=v(i)
             h(j)=h(i)
             m(j)=m(i)
@@ -261,10 +346,16 @@ contains
             rho(j)=rho(i)
             a(j)=a(i)
             cs(j)=cs(i)
-          elseif (x(i)-2.*h(i)<xmin) then
+            u(j)=u(i)
+            du(j)=du(i)
+          elseif (x(i)-3.*h(i)<xmin) then
             ng=ng+1
             j=n+ng
-            x(j)=x(i)+(xmax-xmin)
+            if (y==3) then
+              x(j)=x(i)+(xmax-xmin)
+            else
+              x(j)=x(i)+(xmax-xmin)
+            endif
             v(j)=v(i)
             h(j)=h(i)
             m(j)=m(i)
@@ -272,8 +363,14 @@ contains
             rho(j)=rho(i)
             a(j)=a(i)
             cs(j)=cs(i)
+            u(j)=u(i)
+            du(j)=du(i)
           endif
         enddo
+
+        ! do i=2,ng
+        !   if (abs(x(i)-x(i-1)))
+        ! enddo
 
         ! do i=n,ng
         !   v(i)=0.
