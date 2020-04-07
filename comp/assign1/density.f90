@@ -15,7 +15,7 @@ contains
     ! define place holder density, kernel as well as specific smoothing length and particle position
     real :: w(nx)
     ! define integers
-    integer :: i,j
+    integer :: i
 
 
     !
@@ -158,10 +158,10 @@ contains
           vab=(v(i)-v(j))*((x(i)-x(j))/abs(x(i)-x(j)))
           qa=visc(rho(i),vab,cs(i))
           qb=visc(rho(j),vab,cs(j))
-          ap(j)=m(j)*((p(i)+qa)/rho(i)**2*dw(x(i),x(j),h(i),j)+(p(j)+qb)/rho(j)**2*dw(x(i),x(j),h(j),j))
+          ap(j)=m(j)*((p(i)+qa)/rho(i)**2*dw(x(i),x(j),h(i))+(p(j)+qb)/rho(j)**2*dw(x(i),x(j),h(j)))
           a(i)=a(i)-ap(j)
 
-          dub(j)=m(j)*(p(i)+qa)/rho(i)**2*(v(i)-v(j))*dw(x(i),x(j),h(i),j)
+          dub(j)=m(j)*(p(i)+qa)/rho(i)**2*(v(i)-v(j))*dw(x(i),x(j),h(i))
           du(i)=du(i)+dub(j)
         enddo
         ! sum over all elements to find density per particle
@@ -172,10 +172,9 @@ contains
   end subroutine
 
 
-  real function dw(xin,xon, hin,i)
+  real function dw(xin,xon, hin)
     real,intent(in) :: xin,xon, hin
     real :: sig3,q,dq
-    integer, intent(in) :: i
     ! integer :: i
 
     sig3=2./(3.*hin)
@@ -210,9 +209,8 @@ contains
   end function
 
 
-  subroutine derivs(cs,rho,p,n,a,nx,x,m,h,dx,v,ng,du,u)
+  subroutine derivs(cs,rho,p,n,a,nx,x,m,h,v,ng,du,u)
     integer,intent(in) :: n,nx
-    real, intent(in) ::  dx
     real, intent(inout) :: rho(nx), cs(nx),p(nx), x(nx),h(nx),v(nx),m(nx),du(nx),u(nx)
     real,intent(out) :: a(nx)
     integer :: i

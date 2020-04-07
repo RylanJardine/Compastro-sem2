@@ -13,9 +13,8 @@ program assign
   real :: x(nx), v(nx), m(nx), rho(nx),  p(nx), cs(nx),h(nx),a(nx), ek,po,mt,du(nx),u(nx)
   ! real :: u(nx)
   ! define the max and min of your grid and number of particles, n
-  real :: t,dt,tprint,dtout,b,tstop
-  integer :: n,ifile,z,ng,i
-  real,parameter :: pi=4.*atan(1.)
+  real :: t,dt,tprint,dtout,tstop
+  integer :: n,ifile,z,ng
 
 
 
@@ -26,10 +25,10 @@ program assign
   print*,'Select Standing Wave (1), Isothermal Shock tube (2) or Adiabatic Shock Tube Problem (3)'
   read*,z
   if (z==1) then
-    call setup(rho,nx,x,v,m,cs,n,h,ng,a,p,u,z)
+    call setup(rho,x,v,m,cs,n,h,u,z)
     tstop=5.
   else if ((z==2) .or. (z==3)) then
-    call setup_shock(rho,nx,x,v,m,cs,n,h,a,p,u,z)
+    call setup_shock(rho,x,v,m,cs,n,h,a,p,u,z)
     tstop=0.2
   else
     print*, 'Please Select (1),(2) or (3)'
@@ -45,27 +44,13 @@ program assign
   !   print*, 'Default without viscosity'
   !
   ! endif
-  print*,dx,dx2,gamma
+
   ! call to setup initial conditions at time t=0
 
-  ! call setup(rho,nx,x,v,xmin,dx,m,cs,n,h,xmax,ng,a,p)
-  open(2,file='try.dat',status='replace',action='write')
-  write(2,*)'# x rho'
-  do i=1,n
-    write(2,*)x(i),rho(i)
-  enddo
-  close(2)
 
 
+  call derivs(cs,rho,p,n,a,nx,x,m,h,v,ng,du,u)
 
-  call derivs(cs,rho,p,n,a,nx,x,m,h,dx,v,ng,du,u)
-  ! open(2,file='try.dat',status='replace',action='write')
-  ! write(2,*)'# x rho'
-  ! do i=1,n+ng
-  !   write(2,*)x(i),rho(i)
-  ! enddo
-  ! close(2)
-  ! read*,
   open(1,file='kin.dat',status='replace',action='write')
   po=sum(m(1:n)*a(1:n))
   ek=sum(0.5*m(1:n)*v(1:n)**2)
@@ -77,11 +62,11 @@ program assign
 
   ifile=0
   dtout=0.01
-  tprint=ifile*dtout
+  tprint=(ifile+1)*dtout
   print*,tprint
   call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ng,u,du)
 
-  call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx,ng,du,u)
+  call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,ng,du,u)
 
   ! print*,'b',rho
 
@@ -89,18 +74,14 @@ program assign
     t=t+dt
     if (t>tprint) then
       ifile=ifile+1
-      tprint=ifile*dtout
-      print*,tprint
+      tprint=(ifile+1)*dtout
+      ! print*,tprint
       call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ng,u,du)
     end if
-    call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,dx,ng,du,u)
+    call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,ng,du,u)
     po=sum(m(1:n)*a(1:n))
     mt=sum(m(1:n))
     ek=sum(0.5*m(1:n)*v(1:n)**2)
-    if (ek/ek .ne. 1) then
-      call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ng,u,du)
-      read*,
-    endif
     write(1,*)t,ek,po,mt
     ! print*,a(1)
 

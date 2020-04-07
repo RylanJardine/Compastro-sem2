@@ -7,14 +7,13 @@ module set2
 
 
 contains
-  subroutine setup_shock(rho,nx,x,v,m,cs,n,h,a,p,u,z)
+  subroutine setup_shock(rho,x,v,m,cs,n,h,a,p,u,z)
 
         integer,intent(inout) :: n
-        integer,intent(in) :: nx,z
+        integer,intent(in) :: z
         real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:),a(:),p(:),u(:)
-        integer :: l,k,i,g,n_1,n_2
-        real,parameter :: pi=4.*atan(1.)
-        real :: x2,x3,x1,xmid,xmid2,len,xmin2
+        integer :: l,i,g,n_1,n_2
+        real :: xmid,xmid2,len,xmin2
         y=z
         !
         ! xmin=-1.5
@@ -377,14 +376,12 @@ contains
       end subroutine
 
 
-      subroutine setup(rho,nx,x,v,m,cs,n,h,ng,a,p,u,z)
+      subroutine setup(rho,x,v,m,cs,n,h,u,z)
 
-        integer,intent(inout) :: n,ng
-        integer,intent(in) :: nx,z
-        ! integer, intent(in) :: nx
+        integer,intent(inout) :: n
+        integer,intent(in) :: z
         real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:),u(:)
-        real,intent(inout) :: a(:),p(:)
-        ! real, intent (inout) :: a(n)
+
 
 
         integer :: i
