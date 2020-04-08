@@ -1,6 +1,7 @@
 module physics
   ! use set
   use set2
+  use param
   implicit none
   public :: dw
 
@@ -167,7 +168,10 @@ contains
 
       call get_density(m,x,rho,nx,n,h,ng)
       call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-      h(1:n+ng)=1.2*m(1:n+ng)/rho(1:n+ng)
+
+      if (vvhh==1) then
+        h(1:n+ng)=1.2*m(1:n+ng)/rho(1:n+ng)
+      endif
 
     enddo
 
@@ -181,7 +185,7 @@ contains
 
   real function visc(rho,vab,cs)
     real,intent(in) :: vab,rho,cs
-    real,parameter :: alpha=1.,beta=2.
+    ! real,parameter :: alpha=1.,beta=2.
     real :: vsig
 
     if (vab<0.) then

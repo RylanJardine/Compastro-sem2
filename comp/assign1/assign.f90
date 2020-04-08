@@ -5,6 +5,7 @@ program assign
   use inout
   use physics
   use integrator
+  use param
   ! use ghost
   ! use equation
   implicit none
@@ -12,8 +13,8 @@ program assign
   integer, parameter :: nx=1500
   real :: x(nx), v(nx), m(nx), rho(nx),  p(nx), cs(nx),h(nx),a(nx), ek,po,mt,du(nx),u(nx)
   ! define the max and min of your grid and number of particles, n
-  real :: t,dt,tprint,dtout,tstop
-  integer :: n,ifile,z,ng
+  real :: t,dt,tprint,dtout,tstop,bet,alp
+  integer :: n,ifile,z,ng,vvh,b,vh
 
 
 
@@ -35,16 +36,34 @@ program assign
     print*, 'Please Select (1),(2) or (3)'
   endif
 
-  ! print*, 'Add viscosity? (yes/no)'
-  ! read*,b
-  ! if ((b==yes) .or. (b==y)) then
-  !
-  ! else if ((b==no) .or. b==(n)) then
-  !
-  ! else
-  !   print*, 'Default without viscosity'
-  !
-  ! endif
+  print*, 'Add viscosity (yes=1, no=0)?'
+  read*,b
+  if (b==1) then
+    print*, 'Please select Alpha'
+    read*,alp
+    print*,'Please select Beta'
+    read*,bet
+  else if (b==0) then
+    alp=0.
+    bet=0.
+  else
+    print*, 'Default without viscosity'
+    alp=0.
+    bet=0.
+  endif
+
+  Print*,'Variable smoothing length (yes=1, no=0)?'
+  read*,vh
+  if (vh==1) then
+    vvh=1
+  else if (vh==0) then
+    vvh=0
+  else
+    print*, 'Default with variable smoothing length'
+    vvh=0
+  endif
+
+  call vars(alp,bet,vvh)
 
   ! call to setup initial conditions at time t=0
 
