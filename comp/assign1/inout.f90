@@ -12,17 +12,17 @@ contains
   integer :: i,iunit
   character(len=100) :: filename
 
-
+  !write name of output files
   write(filename,"(a,i5.5)") 'snap_',ifile
-
+  !open output files
   open(newunit=iunit,file=filename,status='replace')
 
   print "(a,f8.3)", ' writing '//trim(filename)// ' t =',t
   ! write in column headers and values
   write(iunit,*) '# x v_x h rho m p cs a u du'
   write(iunit,*) t
-  do i=1,n
-
+  do i=1,n+ng
+    !write in variables to file
     write(iunit,*) x(i),v(i),h(i),rho(i),m(i),p(i),cs(i),a(i),u(i),du(i)
   enddo
   close(iunit)
