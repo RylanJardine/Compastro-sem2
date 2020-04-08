@@ -1,4 +1,4 @@
-module density
+module physics
   ! use set
   use set2
   implicit none
@@ -18,7 +18,7 @@ contains
     integer :: i
 
 
-    !
+
     ! call kernel function and to assign density to each particle
 
     do i=1,n+ng
@@ -29,49 +29,8 @@ contains
 
     enddo
 
-    ! h=m/rho
-    ! print*,'c',rho
-
-    ! do i=1,n+ng
-    !   rho(i)=0.
-    !   do j=1,n+ng
-    !     rho(i)=rho(i)+m(j)*w(x(i),x(j),h(j))
-    !
-    !   enddo
-    ! enddo
-
-
   end subroutine
 
-  real function w(xi,xj,hin)
-
-    ! specific smoothing length and specific and general positions
-
-    real,intent(in) :: hin,xi,xj
-
-
-    ! define additional parameters
-    real :: sig3,q
-
-    ! set normalising factor for 1D
-    sig3=2./(3.*hin)
-
-    ! create array of kernel values
-      ! define parameter q
-      q=abs(xi-xj)/hin
-
-
-      ! set kernel hybrid function
-      if (0. .LE. q .and. q <= 1.) then
-        w=sig3*(1.-3./2.*q**2.*(1-q/2.))
-      elseif (1. < q .and. q <= 2.) then
-        w=sig3/4.*(2.-q)**3.
-      else
-        w=0.
-      endif
-
-
-  end function
 
   subroutine kern(hin,nx,x,xin,w,n,ng)
     ! specific smoothing length and specific and general positions
@@ -114,10 +73,10 @@ contains
     integer,intent(in) :: nx,n,ng
     real,intent(in) :: rho(nx),u(nx)
     real,intent(inout) :: p(nx), cs(nx)
-    ! real, parameter :: gamma=1.
+
 
     ! calculate isothermal pressure
-    ! p(1:n+ng)=rho(1:n+ng)
+
 
     if (y==3) then
       p(1:n+ng)=(gamma-1)*rho(1:n+ng)*u(1:n+ng)
@@ -127,13 +86,7 @@ contains
       cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
     endif
 
-    ! if (y==3) then
-    !   p(1:n+ng)=(gamma-1)*rho(1:n+ng)*u(1:n+ng)
-    !   cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    ! elseif (y==2) then
-      ! p(1:n+ng)=rho(1:n+ng)
-      ! cs(1:n+ng)=sqrt(gamma*p(1:n+ng)/rho(1:n+ng))
-    ! endif
+
 
 
   end subroutine
@@ -160,14 +113,13 @@ contains
           qb=visc(rho(j),vab,cs(j))
           ap(j)=m(j)*((p(i)+qa)/rho(i)**2*dw(x(i),x(j),h(i))+(p(j)+qb)/rho(j)**2*dw(x(i),x(j),h(j)))
           a(i)=a(i)-ap(j)
-
           dub(j)=m(j)*(p(i)+qa)/rho(i)**2*(v(i)-v(j))*dw(x(i),x(j),h(i))
           du(i)=du(i)+dub(j)
         enddo
         ! sum over all elements to find density per particle
-        ! a(i)=-sum(ap(1:n+ng))
+
       enddo
-      ! print*,sum(m(1:n)*a(1:n))
+
 
   end subroutine
 
@@ -175,23 +127,18 @@ contains
   real function dw(xin,xon, hin)
     real,intent(in) :: xin,xon, hin
     real :: sig3,q,dq
-    ! integer :: i
+
 
     sig3=2./(3.*hin)
 
-    ! create array of kernel values
-    ! do i=1,nx
       ! define parameter q
       q=abs(xin-xon)/hin
       dq=(xin-xon)/(hin*abs(xin-xon))
 
-      if (abs(xin-xon) .le. 10.**(-16)) then
+      if (abs(xin-xon) .le. tiny(q)) then
         dq=0.
       endif
-      ! print*,xin-xon
 
-
-      ! print*,q,dq
       ! set kernel hybrid function
       if (0. .LE. q .and. q <= 1.) then
         dw=sig3*(-3.*q*dq+9./4.*q**2*dq)
@@ -200,10 +147,8 @@ contains
       else
         dw=0.
       endif
-      if (dw < 10.**(-18)) then
-        ! print*,dw,i
-      endif
-    ! enddo
+
+
 
 
   end function
@@ -216,23 +161,12 @@ contains
     integer :: i
     integer,intent(inout) :: ng
 
-    ! if (y==1) then
-    !   call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-    ! else
-    !   call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-    ! endif
-    call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
+    call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
 
     do i=1,3
 
       call get_density(m,x,rho,nx,n,h,ng)
-      call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-      ! if (y==1) then
-      !   call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-      ! else
-      !   call set_ghosts2(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
-      ! endif
-
+      call set_ghosts(rho,nx,x,v,m,cs,n,h,a,p,ng,u,du)
       h(1:n+ng)=1.2*m(1:n+ng)/rho(1:n+ng)
 
     enddo

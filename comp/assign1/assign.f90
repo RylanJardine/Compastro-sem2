@@ -3,7 +3,7 @@ program assign
   ! use set
   use set2
   use inout
-  use density
+  use physics
   use integrator
   ! use ghost
   ! use equation
@@ -11,7 +11,6 @@ program assign
   ! set parameters and arrays of length nx
   integer, parameter :: nx=1500
   real :: x(nx), v(nx), m(nx), rho(nx),  p(nx), cs(nx),h(nx),a(nx), ek,po,mt,du(nx),u(nx)
-  ! real :: u(nx)
   ! define the max and min of your grid and number of particles, n
   real :: t,dt,tprint,dtout,tstop
   integer :: n,ifile,z,ng
@@ -27,9 +26,11 @@ program assign
   if (z==1) then
     call setup(rho,x,v,m,cs,n,h,u,z)
     tstop=5.
+    dtout=0.05
   else if ((z==2) .or. (z==3)) then
     call setup_shock(rho,x,v,m,cs,n,h,a,p,u,z)
     tstop=0.2
+    dtout=0.01
   else
     print*, 'Please Select (1),(2) or (3)'
   endif
@@ -61,21 +62,15 @@ program assign
 
 
   ifile=0
-  dtout=0.01
   tprint=(ifile+1)*dtout
-  print*,tprint
   call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ng,u,du)
-
   call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,ng,du,u)
-
-  ! print*,'b',rho
 
   do while (t<tstop)
     t=t+dt
     if (t>tprint) then
       ifile=ifile+1
       tprint=(ifile+1)*dtout
-      ! print*,tprint
       call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ng,u,du)
     end if
     call tim(x,v,a,nx,dt,cs,rho,p,n,m,h,ng,du,u)
@@ -83,8 +78,6 @@ program assign
     mt=sum(m(1:n))
     ek=sum(0.5*m(1:n)*v(1:n)**2)
     write(1,*)t,ek,po,mt
-    ! print*,a(1)
-
   enddo
   close(1)
 

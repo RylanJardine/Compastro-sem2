@@ -14,14 +14,14 @@ contains
 
 
   write(filename,"(a,i5.5)") 'snap_',ifile
-  ! print*,filename, iunit, 'bob'
+
   open(newunit=iunit,file=filename,status='replace')
 
   print "(a,f8.3)", ' writing '//trim(filename)// ' t =',t
   ! write in column headers and values
   write(iunit,*) '# x v_x h rho m p cs a u du'
   write(iunit,*) t
-  do i=1,n+ng
+  do i=1,n
 
     write(iunit,*) x(i),v(i),h(i),rho(i),m(i),p(i),cs(i),a(i),u(i),du(i)
   enddo
