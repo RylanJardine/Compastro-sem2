@@ -1,0 +1,16 @@
+This program is designed to calculate the density, pressure, position, velocity,
+sound speed, acceleration, internal energy and more parameters for 2 different
+types of problem. 1 is a standing wave, and the other is a shock tube which
+can be selected in 2 types either as an isothermal shock tube or one with an
+adiabatic EOS with a certain gamma value. The code outputs snap files for
+specific timesteps (there is not an output for every timestep) and these files
+can be plotted using splash. There is also an output 'kin.dat' which stores
+conservation of mass, momentum and the total kinetic energy.
+
+The code itself can be compiled by using the makefile and typing 'make'.
+It can then be executed using the command ./solve from there the code prompts
+you to ask which problem you would like to solve (1) standing wave (2) Isothermal
+shock tube (3) adiabatic shock tube. Then you are also prompted to select the
+viscosity parameters and if you'd like a variable smoothing length. Other parameters
+such as the grid size/setup can be altered in the file param.f90 which stores the
+global list of parameters.
