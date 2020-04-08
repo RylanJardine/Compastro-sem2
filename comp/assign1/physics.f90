@@ -14,23 +14,54 @@ contains
     real,intent(out) :: rho(nx)
     real,intent(inout) ::h(nx)
     ! define place holder density, kernel as well as specific smoothing length and particle position
-    real :: w(nx)
+    ! real :: w(nx)
+    real ::rhop(nx),q
     ! define integers
-    integer :: i
+    integer :: i,j
 
 
 
     ! call kernel function and to assign density to each particle
 
-    do i=1,n+ng
-      ! call kernel
-      call kern(h(i),nx,x,x(i),w,n,ng)
-      ! sum over all elements to find density per particle
-      rho(i)=sum(m(1:n+ng)*w(1:n+ng))
+    ! do i=1,n+ng
+    !   ! call kernel
+    !   call kern(h(i),nx,x,x(i),w,n,ng)
+    !   ! sum over all elements to find density per particle
+    !   rho(i)=sum(m(1:n+ng)*w(1:n+ng))
+    !
+    ! enddo
 
+    do i=1,n+ng
+      rho(i)=0.
+      do j=1,n+ng
+      ! call kernel
+      q=abs(x(i)-x(j))/h(i)
+      rhop(j)=m(j)*w(q)*2./(3.*h(i))
+      ! sum over all elements to find density per particle
+      rho(i)=rho(i)+rhop(j)
+      enddo
     enddo
 
+
+
   end subroutine
+
+  real function w(q)
+    real,INTENT(IN) :: q
+
+
+
+
+      ! set kernel hybrid function
+      if (0. .LE. q .and. q <= 1.) then
+        w=(1.-3./2.*q**2.*(1-q/2.))
+      elseif (1. < q .and. q <= 2.) then
+        w=1./4.*(2.-q)**3.
+      else
+        w=0.
+      endif
+
+  end function
 
 
   subroutine kern(hin,nx,x,xin,w,n,ng)

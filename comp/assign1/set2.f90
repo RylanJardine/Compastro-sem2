@@ -1,9 +1,9 @@
 module set2
-
+  use param
   implicit none
-  real :: dx,dx2
-  real :: gamma,xmax,xmin
-  integer :: y
+  ! real :: dx,dx2
+  ! real :: gamma,xmax,xmin
+  ! integer :: y
 
 
 contains
@@ -13,25 +13,16 @@ contains
         integer,intent(in) :: z
         real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:),a(:),p(:),u(:)
         integer :: l,i,g,n_1,n_2
-        real :: xmid,xmid2,xmin2
-        y=z
-
-
-          if (z==2) then
-            dx=0.001
-            dx2=0.01
-            gamma=1.
-          else if (z==3) then
-            dx=0.001
-            dx2=0.008
-            gamma=1.4
-          endif
-
-          xmin=-1.5
-          xmid=-1.
-          xmid2=0.
-          xmax=0.5
-          xmin2=-0.5
+        ! real :: xmid,xmid2,xmin2
+        !
+        !
+        !
+        !
+        !   xmin=-1.5
+        !   xmid=-1.
+        !   xmid2=0.
+        !   xmax=0.5
+        !   xmin2=-0.5
           n_1=nint(abs(xmax)/dx)
           n_2=nint(abs(xmin2)/dx2)
 
@@ -123,19 +114,19 @@ contains
       end subroutine
 
 
-      subroutine setup(rho,x,v,m,cs,n,h,u,z)
+      subroutine setup(rho,x,v,m,cs,n,h,u)
 
         integer,intent(inout) :: n
-        integer,intent(in) :: z
+        ! integer,intent(in) :: z
         real,intent(out) :: x(:),m(:),v(:),h(:),rho(:),cs(:),u(:)
         integer :: i
         real,parameter :: pi=4.*atan(1.)
         n=100
-        y=z
-        gamma=1.
-
-        xmin=0.
-        xmax=1.
+        ! y=z
+        ! gamma=1.
+        !
+        ! xmin=0.
+        ! xmax=1.
         cs(1:n)=1.
         rho(1:n)=1.
 

@@ -25,10 +25,12 @@ program assign
   print*,'Select Standing Wave (1), Isothermal Shock tube (2) or Adiabatic Shock Tube Problem (3)'
   read*,z
   if (z==1) then
-    call setup(rho,x,v,m,cs,n,h,u,z)
+    call vars(alp,bet,vvh,z)
+    call setup(rho,x,v,m,cs,n,h,u)
     tstop=5.
     dtout=0.05
   else if ((z==2) .or. (z==3)) then
+    call vars(alp,bet,vvh,z)
     call setup_shock(rho,x,v,m,cs,n,h,a,p,u,z)
     tstop=0.2
     dtout=0.01
@@ -63,7 +65,7 @@ program assign
     vvh=0
   endif
 
-  call vars(alp,bet,vvh)
+  call vars(alp,bet,vvh,z)
 
   ! call to setup initial conditions at time t=0
 
