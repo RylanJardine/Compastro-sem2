@@ -57,6 +57,7 @@ program assign
     endif
     ! call tim(x,v,a,dt)
     l=x(1)*v(2)-x(2)*v(1)
+    r=sqrt(x(1)**2+x(2)**2)
     u=0.5*(v(1)**2+v(2)**2)-1./r
   write(1,*) x(1),x(2),v(1),v(2),a(1),a(2),t,l,u,l-dl
   enddo
