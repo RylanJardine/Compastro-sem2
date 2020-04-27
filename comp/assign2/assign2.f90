@@ -3,7 +3,7 @@ program assign
   implicit none
   real :: x(2),v(2),a(2),r,t,l,u,dl
   integer :: i,j
-  real,parameter :: dt=0.05
+  real,parameter :: dt=0.1
 
 
 
@@ -36,18 +36,10 @@ program assign
   ! endif
 
   open(1,file='param.dat',status='replace',action='write')
-  write(1,*)'# x y v_x v_y a_x a_y t l u dl'
+  write(1,*)'# x y v_x v_y a_x a_y t l e dl'
   write(1,*) x(1),x(2),v(1),v(2),a(1),a(2),t,l,u,l-dl
   do i=1,5000
     t=t+dt
-    !only output specific timesteps
-    ! if (t>tprint) then
-    !   !update output parameters
-    !   ifile=ifile+1
-    !   tprint=(ifile+1)*dtout
-    !   call output(n,x,v,h,nx,rho,m,p,cs,a,t,ifile,ng,u,du)
-    ! end if
-    !timestepping
     if (j==1) then
       call tim(x,v,a,dt)
     else if (j==2) then
@@ -55,7 +47,6 @@ program assign
     else
       call tim(x,v,a,dt)
     endif
-    ! call tim(x,v,a,dt)
     l=x(1)*v(2)-x(2)*v(1)
     r=sqrt(x(1)**2+x(2)**2)
     u=0.5*(v(1)**2+v(2)**2)-1./r
