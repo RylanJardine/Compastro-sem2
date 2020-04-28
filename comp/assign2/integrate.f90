@@ -1,6 +1,6 @@
 module integrator
   implicit none
-  real,parameter :: e=0.7,G=1.,m=1.
+  real,parameter :: G=1.,m=1.
 
 
 contains
@@ -26,7 +26,7 @@ contains
 
         !update final step of v and u
         v=v+0.5*dt*(a-a0)
-        
+
   end subroutine
 
 

@@ -3,10 +3,21 @@ program assign
   implicit none
   real :: x(2),v(2),a(2),r,t,l,u,dl
   integer :: i,j
-  real,parameter :: dt=0.1
+  real :: dt,e
+  ! real ,parameter:: dt=0.05
 
 
 
+
+
+
+
+  print*,'Please select Leapfrog (1) or Runge Kutta (2)'
+  read*,j
+  print*,'Please choose a timestep, dt'
+  read*,dt
+  print*,'Please choose an eccentricity'
+  read*,e
 
   t=0.
   x(1)=1.-e
@@ -22,10 +33,6 @@ program assign
   l=x(1)*v(2)-x(2)*v(1)
   dl=l
   u=0.5*(v(1)**2+v(2)**2)-1./r
-
-
-  print*,'Please select Leapfrog (1) or Runge Kutta (2)'
-  read*,j
   ! if (j==1) then
   !   call tim(x,v,a,dt)
   ! else if (j==2) then
