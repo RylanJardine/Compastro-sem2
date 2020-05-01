@@ -1,0 +1,6 @@
+This code solves the equations of motion for a simple test system in an orbital plane
+with acceleration in x and y of a=-GMx/r^3. This is done using either a simple
+leapfrog integrator or a fourth order Runge Kutta method for a total of 5000 timesteps.
+The number of timesteps can be changed in the assign2.f90 file.  The size of the
+timestep, routine and the eccentricity of the orbit are all enetered by the user
+into the terminal when prompted, 1 file is output at the final timestep.
